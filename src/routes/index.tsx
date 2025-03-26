@@ -1,8 +1,9 @@
 import { Routes, Route } from "react-router-dom"
 import Dashboard from "@/components/pages/Dashboard"
-import Pembeli from "@/components/pages/Pembeli"
-import Penjual from "@/components/pages/Penjual"
-import HutangPenjual from "@/components/pages/HutangPenjual"
+import Pembeli from "@/components/pages/transaksi/Pembeli"
+import Penjual from "@/components/pages/transaksi/Penjual"
+import HutangPenjual from "@/components/pages/transaksi/HutangPenjual"
+import Barang from "@/components/pages/master-data/Barang"
 import NotFound from "@/components/pages/404"
 
 const RoutesIndex = () => {
@@ -13,6 +14,7 @@ const RoutesIndex = () => {
       <Route path="/pembeli" element={Pembeli()} />
       <Route path="/penjual" element={Penjual()} />
       <Route path="/hutang-penjual" element={HutangPenjual()} />
+      <Route path="/barang" element={Barang()} />
       <Route path="/*" element={NotFound()} />
     </Routes>
   )

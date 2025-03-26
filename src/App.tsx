@@ -6,9 +6,9 @@ const App = () => {
   return (
     <div className='bg-[#eaeaea] w-full h-screen flex'>
       <Sidebar />
-      <div className='w-full flex flex-col'>
+      <div className='w-5/6 flex flex-col'>
         <Navbar />
-        <div className='p-5'>
+        <div className='overflow-y-scroll'>
           <RoutesIndex />
         </div>
       </div>
