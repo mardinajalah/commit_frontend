@@ -1,6 +1,6 @@
 import Sidebar from "@/components/layouts/Sidebar";
 import Navbar from "@/components/daisyUI/Navbar";
-import RoutesIndex from "@/routes/index";
+import RoutesIndex from "@/routes";
 
 const App = () => {
   return (
@@ -8,7 +8,7 @@ const App = () => {
       <Sidebar />
       <div className='w-5/6 flex flex-col'>
         <Navbar />
-        <div className='overflow-y-scroll'>
+        <div className='overflow-y-auto'>
           <RoutesIndex />
         </div>
       </div>

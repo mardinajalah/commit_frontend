@@ -3,7 +3,9 @@ import Dashboard from "@/components/pages/Dashboard"
 import Pembeli from "@/components/pages/transaksi/Pembeli"
 import Penjual from "@/components/pages/transaksi/Penjual"
 import HutangPenjual from "@/components/pages/transaksi/HutangPenjual"
-import Barang from "@/components/pages/master-data/Barang"
+import Barang from "@/components/pages/master-data/barang"
+import TambahBarang from "@/components/pages/master-data/barang/TambahBarang"
+import Kategori from "@/components/pages/master-data/kategori"
 import NotFound from "@/components/pages/404"
 
 const RoutesIndex = () => {
@@ -15,6 +17,8 @@ const RoutesIndex = () => {
       <Route path="/penjual" element={Penjual()} />
       <Route path="/hutang-penjual" element={HutangPenjual()} />
       <Route path="/barang" element={Barang()} />
+      <Route path="/barang/tambah-barang" element={TambahBarang()} />
+      <Route path="/kategori" element={Kategori()} />
       <Route path="/*" element={NotFound()} />
     </Routes>
   )

@@ -28,7 +28,7 @@ export const dataAccordion = [
         title: "Hutang Titipan",
         path: "/hutang-titipan",
       },
-    ]
+    ],
   },
   {
     id: 2,
@@ -68,8 +68,8 @@ export const dataAccordion = [
         id: 7,
         title: "Pengeluaran",
         path: "/pengeluaran",
-      }
-    ]
+      },
+    ],
   },
   {
     id: 3,
@@ -114,7 +114,48 @@ export const dataAccordion = [
         id: 8,
         title: "Penitip",
         path: "/penitip",
-      }
-    ]
-  }
-]
+      },
+    ],
+  },
+];
+
+export const dataBarang = [
+  {
+    title: "barang",
+    heders: ["id barang", "nama barang", "harga beli", "harga ecer", "harga grosir", "stok", "stok minimal", "barcode", "gambar", "kategori", "ukuran", "satuan", "status aktif"],
+    data: [
+      {
+        id: "236472",
+        name: "Sampoerna Ice Burst 20",
+        hargaBeli: "Rp 30.128",
+        hargaEcer: "Rp 30.128",
+        hargaGrosir: "Rp 30.128",
+        stok: "2,459 pcs",
+        stokMinimal: "2,459 pcs",
+        barcode: "1234567890",
+        gambar: "gambar.jpg",
+        kategori: "Makanan",
+        ukuran: "Medium",
+        satuan: "KG",
+        status: "yes",
+      },
+    ],
+  },
+];
+
+export const dataKategori = [{
+  title: "kategori",
+  heders: ["kode kategori", "nama", "aktif"],
+  data: [
+    {
+      id: "1",
+      nama: "Makanan",
+      aktif: "yes",
+    },
+    {
+      id: "2",
+      nama: "Minuman",
+      aktif: "yes",
+    },
+  ],
+}]

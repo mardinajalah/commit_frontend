@@ -1,70 +1,46 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const TableComponent: React.FC = () => {
-  const allData = Array(10).fill({
-    id: 236472,
-    name: "Sampoerna Ice Burst 20",
-    hargaBeli: "Rp 30.128",
-    hargaEcer: "Rp 30.128",
-    hargaGrosir: "Rp 30.128",
-    stok: "2,459 pcs",
-    stokMinimal: "2,459 pcs",
-    barcode: "1234567890",
-    gambar: "https://via.placeholder.com/40",
-    kategori: "Makanan",
-    ukuran: "Medium",
-    satuan: "KG",
-    status: "Yes",
-    aktif: true,
-  });
+type dataType = {
+  datas: {
+    title: string;
+    heders: string[];
+    data: { [key: string]: string }[];
+  }[];
+}
+
+const TableComponent = ({ datas } : dataType) => {
+  if (!datas || datas.length === 0) return <p className="text-center">Data tidak tersedia</p>;
+
+  const tableData = datas[0]; // Mengambil elemen pertama dari array
+  const { heders, data } = tableData;
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(allData.length / itemsPerPage);
-  const displayedData = allData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const displayedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="p-4 overflow-hidden max-w-full">
-      <h1 className="text-2xl font-semibold pb-5">Data Barang</h1>
+      <h1 className="text-2xl font-semibold pb-5"> Daftar {tableData.title}</h1>
       <div className="overflow-x-auto w-full">
         <table className="w-full border border-gray-300 rounded-lg min-w-max table-auto">
           <thead className="bg-gray-200">
-            <tr className="text-left">
-              <th className="p-2 border border-gray-300">ID Barang</th>
-              <th className="p-2 border border-gray-300">Nama Barang</th>
-              <th className="p-2 border border-gray-300">Harga Beli</th>
-              <th className="p-2 border border-gray-300">Harga Ecer</th>
-              <th className="p-2 border border-gray-300">Harga Grosir</th>
-              <th className="p-2 border border-gray-300">Stok</th>
-              <th className="p-2 border border-gray-300">Stok Minimal</th>
-              <th className="p-2 border border-gray-300">Kategori</th>
-              <th className="p-2 border border-gray-300">Satuan</th>
-              <th className="p-2 border border-gray-300">Gambar</th>
-              <th className="p-2 border border-gray-300">Ukuran</th>
-              <th className="p-2 border border-gray-300">Barcode</th>
-              <th className="p-2 border border-gray-300">Status</th>
+            <tr className="text-center">
+              {heders.map((header, index) => (
+                <th key={index} className="p-2 border border-gray-300">{header}</th>
+              ))}
               <th className="p-2 border border-gray-300">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {displayedData.map((item, index) => (
-              <tr key={index} className="bg-white hover:bg-gray-100">
-                <td className="p-2 border border-gray-300">{item.id}</td>
-                <td className="p-2 border border-gray-300">{item.name}</td>
-                <td className="p-2 border border-gray-300">{item.hargaBeli}</td>
-                <td className="p-2 border border-gray-300">{item.hargaEcer}</td>
-                <td className="p-2 border border-gray-300">{item.hargaGrosir}</td>
-                <td className="p-2 border border-gray-300">{item.stok}</td>
-                <td className="p-2 border border-gray-300">{item.stokMinimal}</td>
-                <td className="p-2 border border-gray-300">{item.kategori}</td>
-                <td className="p-2 border border-gray-300">{item.satuan}</td>
-                <td className="p-2 border border-gray-300"><img src={item.gambar} alt="Gambar" className="w-10 h-10" /></td>
-                <td className="p-2 border border-gray-300">{item.ukuran}</td>
-                <td className="p-2 border border-gray-300">{item.barcode}</td>
-                <td className="p-2 border border-gray-300 text-green-600 font-bold">{item.status}</td>
+            {displayedData.map((item, rowIndex) => (
+              <tr key={rowIndex} className="bg-white hover:bg-gray-100 text-center">
+                {Object.values(item).map((value, colIndex) => (
+                  <td key={colIndex} className="p-2 border border-gray-300">{value}</td>
+                ))}
                 <td className="p-2 border border-gray-300">
-                  <button className="px-2 py-1 bg-yellow-500 text-white rounded mr-2">✏️</button>
-                  <button className="px-2 py-1 bg-red-500 text-white rounded">🗑️</button>
+                  <button className="cursor-pointer px-2 py-1 bg-yellow-500 text-white rounded mr-2">✏️</button>
+                  <button className="cursor-pointer px-2 py-1 bg-red-500 text-white rounded">🗑️</button>
                 </td>
               </tr>
             ))}
