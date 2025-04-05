@@ -1,8 +1,12 @@
 import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
-  const {pathname} = useLocation();
-  const formattedPathname = pathname.split("/")[1]?.replace(/-/g, " ");
+  const { pathname } = useLocation();
+  let formattedPathname = 'dashboard';
+  const pathParts = pathname.split('/');
+  if (pathParts[2]) {
+    formattedPathname = pathParts[2].replace(/-/g, ' ');
+  }
   return (
     <div className='navbar bg-[#ffff] text-[#514c4c] shadow-sm px-5'>
       <div className='flex-1'>

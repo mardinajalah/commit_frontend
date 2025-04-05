@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className='bg-[#fff] pl-4 pr-1 pb-3 w-1/6 h-screen shadow-md text-[#514c4c] flex flex-col overflow-y-scroll'>
+    <div className='bg-[#fff] px-4 pb-3 w-1/6 h-screen shadow-md text-[#514c4c] flex flex-col overflow-y-auto'>
       <h1 className='font-extrabold uppercase text-xl text-center my-10'>ksp poter</h1>
       <div className='text-lg flex-1'>
         <Link to="/dashboard">

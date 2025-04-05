@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-type dataType = {
-  datas: {
-    title: string;
-    heders: string[];
-    data: { [key: string]: string }[];
-  }[];
-}
+type tableProps = {
+  title: string;
+  heders: string[];
+  data: { [key: string]: string }[];
+}[]
 
-const TableComponent = ({ datas } : dataType) => {
+const TableComponent = ({ datas } : { datas: tableProps }) => {
   if (!datas || datas.length === 0) return <p className="text-center">Data tidak tersedia</p>;
 
   const tableData = datas[0]; // Mengambil elemen pertama dari array
