@@ -1,4 +1,4 @@
-import LayoutRouter from "@/routes/layoutrouter";
+import LayoutRouter from "@/routes/LayoutRouter";
 import Navbar from "../daisyUI/Navbar";
 import Sidebar from "./Sidebar";
 
