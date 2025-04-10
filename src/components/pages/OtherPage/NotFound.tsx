@@ -6,18 +6,14 @@ export default function NotFound() {
   return (
     <>
       <PageMeta
-        title="404 Not Found | TailAdmin"
+        title="404 Not Found | KSP POTER"
         description="Page not found"
       />
       <div className="relative flex flex-col items-center justify-center min-h-screen p-6 bg-white dark:bg-gray-900 overflow-hidden z-0">
         <GridShape />
         <div className="relative z-10 mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
-          <h1 className="mb-4 font-bold text-gray-900 dark:text-white text-4xl sm:text-5xl">
-            404
-          </h1>
-
           <img
-            src="https://source.unsplash.com/400x300/?error,404"
+            src="/image/undraw_page-not-found_6wni.png"
             alt="404 illustration"
             className="w-full h-auto mx-auto mb-6"
           />
