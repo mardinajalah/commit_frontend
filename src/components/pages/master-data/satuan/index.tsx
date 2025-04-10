@@ -7,7 +7,7 @@ const Satuan = () => {
     <div className="p-5">
       <div className="flex justify-end my-3">
         <Link
-          to="/dashboard/sataun/tambah-satuan"
+          to="/dashboard/satuan/tambah-satuan"
           className="btn border-none bg-[#6C0AFF] text-white rounded-2xl"
         >
           Tambah Satuan
