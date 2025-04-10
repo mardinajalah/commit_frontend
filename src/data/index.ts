@@ -122,7 +122,21 @@ export const dataAccordion = [
 export const dataBarang = [
   {
     title: "barang",
-    heders: ["id barang", "nama barang", "harga beli", "harga ecer", "harga grosir", "stok", "stok minimal", "barcode", "gambar", "kategori", "ukuran", "satuan", "status aktif"],
+    heders: [
+      "id barang",
+      "nama barang",
+      "harga beli",
+      "harga ecer",
+      "harga grosir",
+      "stok",
+      "stok minimal",
+      "barcode",
+      "gambar",
+      "kategori",
+      "ukuran",
+      "satuan",
+      "status aktif",
+    ],
     data: [
       {
         id: "236472",
@@ -143,19 +157,35 @@ export const dataBarang = [
   },
 ];
 
-export const dataKategori = [{
-  title: "kategori",
-  heders: ["kode kategori", "nama", "aktif"],
-  data: [
-    {
-      id: "1",
-      nama: "Makanan",
-      aktif: "yes",
-    },
-    {
-      id: "2",
-      nama: "Minuman",
-      aktif: "yes",
-    },
-  ],
-}]
+export const dataSatuan = [
+  {
+    title: "satuan",
+    heders: ["kode satuan", "satuan", "aktif"],
+    data: [
+      {
+        kodeSatuan: "12345",
+        satuan: "KG",
+        aktif: "yes",
+      },
+    ],
+  },
+];
+
+export const dataKategori = [
+  {
+    title: "kategori",
+    heders: ["kode kategori", "nama", "aktif"],
+    data: [
+      {
+        id: "1",
+        nama: "Makanan",
+        aktif: "yes",
+      },
+      {
+        id: "2",
+        nama: "Minuman",
+        aktif: "yes",
+      },
+    ],
+  },
+];
