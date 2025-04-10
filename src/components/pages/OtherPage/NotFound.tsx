@@ -9,7 +9,7 @@ export default function NotFound() {
         title="404 Not Found | KSP POTER"
         description="Page not found"
       />
-      <div className="relative flex flex-col items-center justify-center min-h-screen p-6 bg-white dark:bg-gray-900 overflow-hidden z-0">
+      <div className="relative flex flex-col items-center justify-center min-h-screen p-6 bg-white overflow-hidden z-0">
         <GridShape />
         <div className="relative z-10 mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
           <img
@@ -18,13 +18,13 @@ export default function NotFound() {
             className="w-full h-auto mx-auto mb-6"
           />
 
-          <p className="mb-6 text-base text-gray-700 dark:text-gray-300 sm:text-lg">
+          <p className="mb-6 text-base text-black sm:text-lg">
             We can’t seem to find the page you are looking for!
           </p>
 
           <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3.5 text-sm font-medium text-gray-700 shadow hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-white/[0.05] dark:hover:text-white"
+            to="/dashboard"
+            className="inline-flex items-center justify-center rounded-lg border text-white border-gray-300 bg-blue-600 px-5 py-3.5 text-sm font-medium shadow hover:bg-blue-800  "
           >
             Back to Home Page
           </Link>
