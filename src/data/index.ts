@@ -122,7 +122,7 @@ export const dataAccordion = [
 export const dataBarang = [
   {
     title: "barang",
-    heders: [
+    columns: [
       "id barang",
       "nama barang",
       "harga beli",
@@ -137,9 +137,9 @@ export const dataBarang = [
       "satuan",
       "status aktif",
     ],
-    data: [
+    data: Array.from({ length: 100 }, (_, index) => (
       {
-        id: "236472",
+        id: `${index + 1}`,
         name: "Sampoerna Ice Burst 20",
         hargaBeli: "Rp 30.128",
         hargaEcer: "Rp 30.128",
@@ -152,15 +152,15 @@ export const dataBarang = [
         ukuran: "Medium",
         satuan: "KG",
         status: "yes",
-      },
-    ],
+      }
+    )),
   },
 ];
 
 export const dataSatuan = [
   {
     title: "satuan",
-    heders: ["kode satuan", "satuan", "aktif"],
+    columns: ["kode satuan", "satuan", "aktif"],
     data: [
       {
         kodeSatuan: "12345",
@@ -174,7 +174,7 @@ export const dataSatuan = [
 export const dataKategori = [
   {
     title: "kategori",
-    heders: ["kode kategori", "nama", "aktif"],
+    columns: ["kode kategori", "nama", "aktif"],
     data: [
       {
         id: "1",

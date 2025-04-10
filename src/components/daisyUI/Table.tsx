@@ -1,50 +1,20 @@
 import { useState } from "react";
+import { getPagination } from "@/components/layouts/Pagination";
 
 type tableProps = {
   title: string;
-  heders: string[];
+  columns: string[];
   data: { [key: string]: string }[];
 }[];
 
-function getPagination(current: number, total: number): (number | string)[] {
-  const delta = 1;
-  const range: (number | string)[] = [];
-  const rangeWithDots: (number | string)[] = [];
 
-  for (let i = 1; i <= total; i++) {
-    if (
-      i === 1 ||
-      i === total ||
-      (i >= current - delta && i <= current + delta)
-    ) {
-      range.push(i);
-    }
-  }
-
-  let prev: number | undefined;
-  for (let i of range) {
-    if (prev !== undefined) {
-      if (typeof i === "number" && typeof prev === "number") {
-        if (i - prev === 2) {
-          rangeWithDots.push(prev + 1);
-        } else if (i - prev > 2) {
-          rangeWithDots.push("...");
-        }
-      }
-    }
-    rangeWithDots.push(i);
-    prev = i as number;
-  }
-
-  return rangeWithDots;
-}
 
 const TableComponent = ({ datas }: { datas: tableProps }) => {
   if (!datas || datas.length === 0)
     return <p className="text-center">Data tidak tersedia</p>;
 
   const tableData = datas[0]; // Ambil elemen pertama
-  const { heders, data } = tableData;
+  const { columns, data } = tableData;
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -61,12 +31,12 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
         <table className="w-full border border-gray-300 rounded-lg min-w-max table-auto">
           <thead className="bg-gray-200">
             <tr className="text-center">
-              {heders.map((header, index) => (
+              {columns.map((column, index) => (
                 <th
                   key={index}
                   className="capitalize p-2 border border-gray-300"
                 >
-                  {header}
+                  {column}
                 </th>
               ))}
               <th className="p-2 border border-gray-300">Aksi</th>
