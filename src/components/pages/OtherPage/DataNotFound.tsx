@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 const DataNotFound = () => {
   return (
     <div className="flex flex-col items-center justify-center flex-1 min-h-[400px] p-10 mt-28 rounded-xl z-10 mx-auto text-center bg-white sm:max-w-[600px] shadow-lg">
