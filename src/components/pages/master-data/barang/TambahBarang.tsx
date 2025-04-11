@@ -32,7 +32,7 @@ const TambahBarang = () => {
               <option>Pilih satuan</option>
             </select>
           </div>
-
+          
           <div>
             <label className='block text-gray-700 mb-1'>Harga Cash</label>
             <input type='text' placeholder='Masukkan harga cash' className='w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500' />

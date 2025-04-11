@@ -92,26 +92,31 @@ export const dataAccordion = [
       },
       {
         id: 4,
+        title: "Anggota",
+        path: "/dashboard/anggota",
+      },
+      {
+        id: 5,
         title: "Pengurus",
         path: "/dashboard/pengurus",
       },
       {
-        id: 5,
+        id: 6,
         title: "Supplier",
         path: "/dashboard/supplier",
       },
       {
-        id: 6,
+        id: 7,
         title: "Petugas",
         path: "/dashboard/petugas",
       },
       {
-        id: 7,
+        id: 8,
         title: "Barang Titipan",
         path: "/dashboard/barang-titipan",
       },
       {
-        id: 8,
+        id: 9,
         title: "Penitip",
         path: "/dashboard/penitip",
       },
@@ -137,9 +142,9 @@ export const dataBarang = [
       "satuan",
       "status aktif",
     ],
-    data: Array.from({ length: 100 }, (_, index) => (
+    data: [
       {
-        id: `${index + 1}`,
+        id: `12345`,
         name: "Sampoerna Ice Burst 20",
         hargaBeli: "Rp 30.128",
         hargaEcer: "Rp 30.128",
@@ -153,7 +158,7 @@ export const dataBarang = [
         satuan: "KG",
         status: "yes",
       }
-    )),
+    ],
   },
 ];
 
@@ -185,7 +190,7 @@ export const dataKategori = [
         id: "2",
         nama: "Minuman",
         aktif: "yes",
-      },
+      }
     ],
   },
 ];
