@@ -7,6 +7,7 @@ import TambahBarang from "@/components/pages/master-data/barang/TambahBarang";
 import Kategori from "@/components/pages/master-data/kategori";
 import Dashboard from "@/components/pages/Dashboard";
 import Satuan from "@/components/pages/master-data/satuan";
+import DataNotFound from "@/components/pages/OtherPage/DataNotFound";
 
 const LayoutRouter = () => {
   return (
@@ -19,7 +20,7 @@ const LayoutRouter = () => {
       <Route path="/barang/tambah-barang" element={<TambahBarang />} />
       <Route path="/satuan" element={<Satuan />} />
       <Route path="/kategori" element={<Kategori />} />
-      <Route path="/*" element={<h1>data tidak di temukan</h1>} />
+      <Route path="/*" element={<DataNotFound />} />
     </Routes>
   );
 };
