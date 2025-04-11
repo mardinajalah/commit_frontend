@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import PageMeta from "@/components/daisyUI/PageMeta";
-import GridShape from "@/components/daisyUI/GridShape";
 
 export default function NotFound() {
   return (
@@ -10,7 +9,6 @@ export default function NotFound() {
         description="Page not found"
       />
       <div className="relative flex flex-col items-center justify-center min-h-screen p-6 bg-white overflow-hidden z-0">
-        <GridShape />
         <div className="relative z-10 mx-auto w-full max-w-[242px] text-center sm:max-w-[472px]">
           <img
             src="/image/undraw_page-not-found_6wni.png"
