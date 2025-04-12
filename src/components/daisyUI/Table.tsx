@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { getPagination } from "@/components/layouts/Pagination";
+import { getPagination } from "../layouts/Pagination";
 
-type tableProps = {
-  title: string;
-  columns: string[];
-  data: { [key: string]: string }[];
-}[];
+type TableProps<T> = {
+  datas: {
+    title: string;
+    columns: string[];
+    data: T[];
+  }[];
+};
 
-
-
-const TableComponent = ({ datas }: { datas: tableProps }) => {
+const Table = <T extends Record<string, any>>({ datas }: TableProps<T>) => {
   if (!datas || datas.length === 0)
     return <p className="text-center">Data tidak tersedia</p>;
 
-  const tableData = datas[0]; // Ambil elemen pertama
+  const tableData = datas[0];
   const { columns, data } = tableData;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,10 +32,7 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
           <thead className="bg-gray-200">
             <tr className="text-center">
               {columns.map((column, index) => (
-                <th
-                  key={index}
-                  className="capitalize p-2 border border-gray-300"
-                >
+                <th key={index} className="capitalize p-2 border border-gray-300">
                   {column}
                 </th>
               ))}
@@ -44,10 +41,7 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
           </thead>
           <tbody>
             {displayedData.map((item, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className="bg-white hover:bg-gray-100 text-center"
-              >
+              <tr key={rowIndex} className="bg-white hover:bg-gray-100 text-center">
                 {Object.values(item).map((value, colIndex) => (
                   <td key={colIndex} className="p-2 border border-gray-300">
                     {value}
@@ -77,6 +71,7 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
           Previous
         </button>
 
+        {/* Page numbers */}
         {getPagination(currentPage, totalPages).map((item, index) => (
           <button
             key={index}
@@ -96,9 +91,7 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
 
         <button
           className="px-4 py-2 border border-gray-300 rounded bg-white hover:bg-gray-200 disabled:opacity-50"
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
         >
           Next
@@ -108,4 +101,4 @@ const TableComponent = ({ datas }: { datas: tableProps }) => {
   );
 };
 
-export default TableComponent;
+export default Table;

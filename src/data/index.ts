@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const dataAccordion = [
   {
     id: 1,
@@ -127,24 +129,10 @@ export const dataAccordion = [
 export const dataBarang = [
   {
     title: "barang",
-    columns: [
-      "id barang",
-      "nama barang",
-      "harga beli",
-      "harga ecer",
-      "harga grosir",
-      "stok",
-      "stok minimal",
-      "barcode",
-      "gambar",
-      "kategori",
-      "ukuran",
-      "satuan",
-      "status aktif",
-    ],
+    columns: ["id barang", "nama barang", "harga beli", "harga ecer", "harga grosir", "stok", "stok minimal", "barcode", "gambar", "kategori", "ukuran", "satuan", "status aktif"],
     data: [
       {
-        id: `12345`,
+        id: "12345",
         name: "Sampoerna Ice Burst 20",
         hargaBeli: "Rp 30.128",
         hargaEcer: "Rp 30.128",
@@ -157,24 +145,24 @@ export const dataBarang = [
         ukuran: "Medium",
         satuan: "KG",
         status: "yes",
-      }
-    ],
-  },
-];
-
-export const dataSatuan = [
-  {
-    title: "satuan",
-    columns: ["kode satuan", "satuan", "aktif"],
-    data: [
-      {
-        kodeSatuan: "12345",
-        satuan: "KG",
-        aktif: "yes",
       },
     ],
   },
 ];
+
+export const getAllDataSatuan = () => {
+  const datas = axios.get("http://localhost:3000/satuan").then((res) => ({
+    title: "satuan",
+    columns: ["Kode Satuan", "Satuan", "Aktif"],
+    data: res.data,
+  })).catch((err) => ({
+    title: "satuan",
+    columns: ["Kode Satuan", "Satuan", "Aktif"],
+    data: err,
+  }));
+
+  return datas;
+};
 
 export const dataKategori = [
   {
@@ -190,7 +178,7 @@ export const dataKategori = [
         id: "2",
         nama: "Minuman",
         aktif: "yes",
-      }
+      },
     ],
   },
 ];
