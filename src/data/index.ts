@@ -125,30 +125,37 @@ export const dataAccordion = [
     ],
   },
 ];
+//   {
+//     title: 'barang',
+//     header: ['id barang', 'nama barang', 'harga beli', 'harga ecer', 'harga grosir', 'stok', 'stok minimal', 'barcode', 'gambar', 'kategori', 'ukuran', 'satuan', 'status aktif'],
+//     data: [
+//       {
+//         id: '12345',
+//         name: 'Sampoerna Ice Burst 20',
+//         hargaBeli: 'Rp 30.128',
+//         hargaEcer: 'Rp 30.128',
+//         hargaGrosir: 'Rp 30.128',
+//         stok: '2,459 pcs',
+//         stokMinimal: '2,459 pcs',
+//         barcode: '1234567890',
+//         gambar: 'gambar.jpg',
+//         kategori: 'Makanan',
+//         ukuran: 'Medium',
+//         satuan: 'KG',
+//         status: 'yes',
+//       },
+//     ],
+//   },
+// ];
 
-export const dataBarang = [
-  {
-    title: 'barang',
-    header: ['id barang', 'nama barang', 'harga beli', 'harga ecer', 'harga grosir', 'stok', 'stok minimal', 'barcode', 'gambar', 'kategori', 'ukuran', 'satuan', 'status aktif'],
-    data: [
-      {
-        id: '12345',
-        name: 'Sampoerna Ice Burst 20',
-        hargaBeli: 'Rp 30.128',
-        hargaEcer: 'Rp 30.128',
-        hargaGrosir: 'Rp 30.128',
-        stok: '2,459 pcs',
-        stokMinimal: '2,459 pcs',
-        barcode: '1234567890',
-        gambar: 'gambar.jpg',
-        kategori: 'Makanan',
-        ukuran: 'Medium',
-        satuan: 'KG',
-        status: 'yes',
-      },
-    ],
-  },
-];
+export const getAllDataBarang = () => {
+  const datas = axios
+    .get('http://localhost:3000/api/product')
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+}
 
 export const getAllDataSatuan = () => {
   const datas = axios
@@ -160,7 +167,7 @@ export const getAllDataSatuan = () => {
 };
 
 export const deleteSatuan = (id: string) => {
-  return axios.delete(`http://localhost:3000/unit/${id}`);
+  return axios.delete(`http://localhost:3000/api/unit/${id}`);
 };
 
 export const dataKategori = [
