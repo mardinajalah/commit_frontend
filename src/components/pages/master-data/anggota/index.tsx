@@ -19,10 +19,10 @@ const Anggota = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (nip: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Yakin ingin menghapus data ini?")) {
       try {
-        await deleteAnggota(nip);
+        await deleteAnggota(id);
         fetchData(); // Refresh data
       } catch (err) {
         console.error("Gagal menghapus data:", err);
@@ -37,6 +37,7 @@ const Anggota = () => {
           datas={tableData}
           to="/dashboard/anggota/tambah-anggota"
           onDelete={handleDelete}
+          idFild="nip"
         />
       </TampilanUtama>
     </>

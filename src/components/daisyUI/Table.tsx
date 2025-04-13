@@ -10,9 +10,10 @@ type TableProps = {
   }[];
   to: string;
   onDelete: (id: string) => void;
+  idFild?: string;
 };
 
-const Table = ({ datas, to, onDelete }: TableProps) => {
+const Table = ({ datas, to, onDelete, idFild = "id" }: TableProps) => {
   if (!datas || datas.length === 0) return <p className='text-center'>Data tidak tersedia</p>;
 
   const tableData = datas[0];
@@ -77,13 +78,13 @@ const Table = ({ datas, to, onDelete }: TableProps) => {
                   ))}
                   <td className='p-2 border border-gray-300'>
                     <Link
-                      to={`${to}/${item.id}`}
+                      to={`${to}/${item[idFild]}`}
                       className='cursor-pointer px-2 py-1 bg-yellow-500 text-white rounded mr-2'
                     >
                       ✏️
                     </Link>
                     <button
-                      onClick={() => onDelete(item.id)}
+                      onClick={() => onDelete(item[idFild])}
                       className='cursor-pointer px-2 py-1 bg-red-500 text-white rounded'
                     >
                       🗑️

@@ -22,11 +22,11 @@ export interface AnggotaType {
   title: string;
   header: string[];
   data: {
-    nip: number;
+    nip: string;
     name: string;
-    accountNumber: number;
+    accountNumber: string;
     bank: string;
-    phoneNumber: number;
+    phoneNumber: string;
     address: string;
     creditLimit: number;
     isActive: string;

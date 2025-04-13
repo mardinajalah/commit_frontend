@@ -18,26 +18,26 @@ const LayoutRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/pembeli" element={<Pembeli />} />
-      <Route path="/penjual" element={<Penjual />} />
-      <Route path="/hutang-penjual" element={<HutangPenjual />} />
-      <Route path="/barang" element={<Barang />} />
-      <Route path="/barang/tambah-barang" element={<TambahBarang />} />
-      <Route path="/satuan" element={<Satuan />} />
-      <Route path="/satuan/tambah-satuan" element={<TambahSatuan />} />
-      <Route path="/satuan/tambah-satuan/:id" element={<TambahSatuan />} />
-      <Route path="/anggota" element={<Anggota />} />
-      <Route path="/kategori" element={<Kategori />} />
-      <Route path="/kategori/tambah-kategori" element={<TambahKategori />} />
+      <Route path="pembeli" element={<Pembeli />} />
+      <Route path="penjual" element={<Penjual />} />
+      <Route path="hutang-penjual" element={<HutangPenjual />} />
+      <Route path="barang" element={<Barang />} />
+      <Route path="barang/tambah-barang" element={<TambahBarang />} />
+      <Route path="satuan" element={<Satuan />} />
+      <Route path="satuan/tambah-satuan" element={<TambahSatuan />} />
+      <Route path="satuan/tambah-satuan/:id" element={<TambahSatuan />} />
+      <Route path="anggota" element={<Anggota />} />
+      <Route path="kategori" element={<Kategori />} />
+      <Route path="kategori/tambah-kategori" element={<TambahKategori />} />
       <Route
-        path="/kategori/tambah-kategori/:id"
+        path="kategori/tambah-kategori/:id"
         element={<TambahKategori />}
       />
-      <Route path="/anggota" element={<Anggota />} />
-      <Route path="/anggota/tambah-anggota" element={<TambahAnggota />} />
-      <Route path="/anggota/tambah-anggota/:id" element={<TambahAnggota />} />
+      <Route path="anggota" element={<Anggota />} />
+      <Route path="anggota/tambah-anggota" element={<TambahAnggota />} />
+      <Route path="anggota/tambah-anggota/:nip" element={<TambahAnggota />} />
 
-      <Route path="/*" element={<DataNotFound />} />
+      <Route path="*" element={<DataNotFound />} />
     </Routes>
   );
 };
