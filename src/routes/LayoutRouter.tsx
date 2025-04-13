@@ -27,6 +27,11 @@ const LayoutRouter = () => {
       <Route path="/anggota" element={<Anggota />} />
       <Route path="/kategori" element={<Kategori />} />
       <Route path="/kategori/tambah-kategori" element={<TambahKategori />} />
+      <Route
+        path="/kategori/tambah-kategori/:id"
+        element={<TambahKategori />}
+      />
+
       <Route path="/*" element={<DataNotFound />} />
     </Routes>
   );

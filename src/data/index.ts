@@ -1,126 +1,126 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const dataAccordion = [
   {
     id: 1,
-    title: 'Transaksi',
+    title: "Transaksi",
     items: [
       {
         id: 1,
-        title: 'Pembelian',
-        path: '/dashboard/pembeli',
+        title: "Pembelian",
+        path: "/dashboard/pembeli",
       },
       {
         id: 2,
-        title: 'Penjualan',
-        path: '/dashboard/penjual',
+        title: "Penjualan",
+        path: "/dashboard/penjual",
       },
       {
         id: 3,
-        title: 'Hutang penjualan',
-        path: '/dashboard/hutang-penjual',
+        title: "Hutang penjualan",
+        path: "/dashboard/hutang-penjual",
       },
       {
         id: 4,
-        title: 'Penjualan Titipan',
-        path: '/dashboard/titipan',
+        title: "Penjualan Titipan",
+        path: "/dashboard/titipan",
       },
       {
         id: 5,
-        title: 'Hutang Titipan',
-        path: '/dashboard/hutang-titipan',
+        title: "Hutang Titipan",
+        path: "/dashboard/hutang-titipan",
       },
     ],
   },
   {
     id: 2,
-    title: 'Laporan',
+    title: "Laporan",
     items: [
       {
         id: 1,
-        title: 'Laporan Penjualan',
-        path: '/dashboard/laporan-penjualan',
+        title: "Laporan Penjualan",
+        path: "/dashboard/laporan-penjualan",
       },
       {
         id: 2,
-        title: 'Laporan Pembelian',
-        path: '/dashboard/laporan-pembelian',
+        title: "Laporan Pembelian",
+        path: "/dashboard/laporan-pembelian",
       },
       {
         id: 3,
-        title: 'Laporan Piutang',
-        path: '/dashboard/laporan-piutang',
+        title: "Laporan Piutang",
+        path: "/dashboard/laporan-piutang",
       },
       {
         id: 4,
-        title: 'Belanja Anggota',
-        path: '/dashboard/belanja-anggota',
+        title: "Belanja Anggota",
+        path: "/dashboard/belanja-anggota",
       },
       {
         id: 5,
-        title: 'Laporan Transaksi',
-        path: '/dashboard/laporan-transaksi',
+        title: "Laporan Transaksi",
+        path: "/dashboard/laporan-transaksi",
       },
       {
         id: 6,
-        title: 'Laporan Titipan',
-        path: '/dashboard/laporan-titipan',
+        title: "Laporan Titipan",
+        path: "/dashboard/laporan-titipan",
       },
       {
         id: 7,
-        title: 'Pengeluaran',
-        path: '/dashboard/pengeluaran',
+        title: "Pengeluaran",
+        path: "/dashboard/pengeluaran",
       },
     ],
   },
   {
     id: 3,
-    title: 'Master Data',
+    title: "Master Data",
     items: [
       {
         id: 1,
-        title: 'Barang',
-        path: '/dashboard/barang',
+        title: "Barang",
+        path: "/dashboard/barang",
       },
       {
         id: 2,
-        title: 'Kategori',
-        path: '/dashboard/kategori',
+        title: "Kategori",
+        path: "/dashboard/kategori",
       },
       {
         id: 3,
-        title: 'Satuan',
-        path: '/dashboard/satuan',
+        title: "Satuan",
+        path: "/dashboard/satuan",
       },
       {
         id: 4,
-        title: 'Anggota',
-        path: '/dashboard/anggota',
+        title: "Anggota",
+        path: "/dashboard/anggota",
       },
       {
         id: 5,
-        title: 'Pengurus',
-        path: '/dashboard/pengurus',
+        title: "Pengurus",
+        path: "/dashboard/pengurus",
       },
       {
         id: 6,
-        title: 'Supplier',
-        path: '/dashboard/supplier',
+        title: "Supplier",
+        path: "/dashboard/supplier",
       },
       {
         id: 7,
-        title: 'Petugas',
-        path: '/dashboard/petugas',
+        title: "Petugas",
+        path: "/dashboard/petugas",
       },
       {
         id: 8,
-        title: 'Barang Titipan',
-        path: '/dashboard/barang-titipan',
+        title: "Barang Titipan",
+        path: "/dashboard/barang-titipan",
       },
       {
         id: 9,
-        title: 'Penitip',
-        path: '/dashboard/penitip',
+        title: "Penitip",
+        path: "/dashboard/penitip",
       },
     ],
   },
@@ -150,16 +150,16 @@ export const dataAccordion = [
 
 export const getAllDataBarang = () => {
   const datas = axios
-    .get('http://localhost:3000/api/product')
+    .get("http://localhost:3000/api/product")
     .then((res) => res.data)
     .catch((err) => (console.log(err), []));
 
   return datas;
-}
+};
 
 export const getAllDataSatuan = () => {
   const datas = axios
-    .get('http://localhost:3000/api/unit')
+    .get("http://localhost:3000/api/unit")
     .then((res) => res.data)
     .catch((err) => (console.log(err), []));
 
@@ -170,21 +170,15 @@ export const deleteSatuan = (id: string) => {
   return axios.delete(`http://localhost:3000/api/unit/${id}`);
 };
 
-export const dataKategori = [
-  {
-    title: 'kategori',
-    header: ['kode kategori', 'nama', 'aktif'],
-    data: [
-      {
-        id: '1',
-        nama: 'Makanan',
-        aktif: 'yes',
-      },
-      {
-        id: '2',
-        nama: 'Minuman',
-        aktif: 'yes',
-      },
-    ],
-  },
-];
+export const getAllDataKategori = () => {
+  const datas = axios
+    .get("http://localhost:3000/api/category")
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+};
+
+export const deleteKategori = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/category/${id}`);
+};
