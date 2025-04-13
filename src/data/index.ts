@@ -182,3 +182,16 @@ export const getAllDataKategori = () => {
 export const deleteKategori = (id: string) => {
   return axios.delete(`http://localhost:3000/api/category/${id}`);
 };
+
+export const getAllDataAnggota = () => {
+  const datas = axios
+    .get("http://localhost:3000/api/member")
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+};
+
+export const deleteAnggota = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/member/${id}`);
+};

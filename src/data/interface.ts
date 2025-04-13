@@ -18,6 +18,21 @@ export interface KategoriType {
   }[];
 }
 
+export interface AnggotaType {
+  title: string;
+  header: string[];
+  data: {
+    nip: number;
+    name: string;
+    accountNumber: number;
+    bank: string;
+    phoneNumber: number;
+    address: string;
+    creditLimit: number;
+    isActive: string;
+  }[];
+}
+
 export interface BarangType {
   title: string;
   header: string[];

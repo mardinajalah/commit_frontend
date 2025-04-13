@@ -10,6 +10,8 @@ import Satuan from "@/components/pages/master-data/satuan";
 import DataNotFound from "@/components/pages/OtherPage/DataNotFound";
 import TambahKategori from "@/components/pages/master-data/kategori/TambahKategori";
 import Anggota from "@/components/pages/master-data/anggota";
+import TambahAnggota from "@/components/pages/master-data/anggota/TambahAnggota";
+
 import TambahSatuan from "@/components/pages/master-data/satuan/TambahSatuan";
 
 const LayoutRouter = () => {
@@ -31,6 +33,9 @@ const LayoutRouter = () => {
         path="/kategori/tambah-kategori/:id"
         element={<TambahKategori />}
       />
+      <Route path="/anggota" element={<Anggota />} />
+      <Route path="/anggota/tambah-anggota" element={<TambahAnggota />} />
+      <Route path="/anggota/tambah-anggota/:id" element={<TambahAnggota />} />
 
       <Route path="/*" element={<DataNotFound />} />
     </Routes>
