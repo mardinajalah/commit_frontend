@@ -22,8 +22,7 @@ const formSchema = z.object({
 
 const TambahAnggota = () => {
   const navigate = useNavigate();
-  const { id: paramId } = useParams();
-  console.log(paramId);
+  const { nip: paramId } = useParams();
 
   const [form, setForm] = useState({
     nip: "",
@@ -124,6 +123,7 @@ const TambahAnggota = () => {
             name="nip"
             placeholder="Masukan NIP Anggota"
             value={form.nip}
+            disabled={!!paramId}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#6C0AFF]"
           />

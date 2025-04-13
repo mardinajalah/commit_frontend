@@ -192,6 +192,6 @@ export const getAllDataAnggota = () => {
   return datas;
 };
 
-export const deleteAnggota = (id: string) => {
-  return axios.delete(`http://localhost:3000/api/member/${id}`);
+export const deleteAnggota = (nip: string) => {
+  return axios.delete(`http://localhost:3000/api/member/${nip}`);
 };
