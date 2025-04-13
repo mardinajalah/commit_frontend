@@ -2,22 +2,22 @@ import { useEffect, useState } from "react";
 import { getPagination } from "../layouts/Pagination";
 import { Link } from "react-router-dom";
 
-type TableProps<T> = {
+type TableProps = {
   datas: {
     title: string;
-    columns: string[];
-    data: T[];
+    header: string[];
+    data: any[];
   }[];
   to: string;
   onDelete: (id: string) => void;
 };
 
-const Table = <T extends Record<string, any>>({ datas, to, onDelete }: TableProps<T>) => {
+const Table = ({ datas, to, onDelete }: TableProps) => {
   if (!datas || datas.length === 0)
     return <p className="text-center">Data tidak tersedia</p>;
 
   const tableData = datas[0];
-  const { columns, data } = tableData;
+  const { header, data } = tableData;
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -42,7 +42,7 @@ const Table = <T extends Record<string, any>>({ datas, to, onDelete }: TableProp
         <table className="w-full border border-gray-300 rounded-lg min-w-max table-auto">
           <thead className="bg-gray-200">
             <tr className="text-center">
-              {columns.map((column, index) => (
+              {header.map((column, index) => (
                 <th key={index} className="capitalize p-2 border border-gray-300">
                   {column}
                 </th>
@@ -53,14 +53,14 @@ const Table = <T extends Record<string, any>>({ datas, to, onDelete }: TableProp
           <tbody>
             {displayedData.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center p-4">
+                <td colSpan={header.length + 1} className="text-center p-4">
                   Tidak ada data pada halaman ini.
                 </td>
               </tr>
             ) : (
               displayedData.map((item, rowIndex) => (
                 <tr key={rowIndex} className="bg-white hover:bg-gray-100 text-center">
-                  {Object.values(item).map((value, colIndex) => (
+                  {header.map((value, colIndex) => (
                     <td key={colIndex} className="p-2 border border-gray-300">
                       {value}
                     </td>

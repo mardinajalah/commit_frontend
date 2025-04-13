@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { SatuanType } from "@/data/interface";
 
 const Satuan = () => {
-  const [tableData, setTableData] = useState<{ title: string; columns: string[]; data: SatuanType[] }[]>([]);
+  const [tableData, setTableData] = useState<{ title: string; header: string[]; data: SatuanType[] }[]>([]);
 
   const fetchData = () => {
     getAllDataSatuan().then((res) => {

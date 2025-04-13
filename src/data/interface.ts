@@ -1,5 +1,9 @@
 export interface SatuanType {
-  kode_satuan: string;
-  satuan: string;
-  aktif: string;
+  title: string;
+  header: string[];
+  data: {
+    id: string;
+    name: string;
+    isActive: string;
+  }[];
 }
