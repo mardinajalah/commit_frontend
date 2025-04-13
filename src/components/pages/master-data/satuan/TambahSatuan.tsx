@@ -3,34 +3,31 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { z } from "zod";
 
+// Schema validasi hanya untuk name dan isActive (optional)
 const formSchema = z.object({
-  id: z.string().min(5, "ID harus 5 karakter").max(5, "ID maksimal 5 karakter"),
-  satuan: z.string().max(50, "Satuan maksimal 50 karakter"),
-  aktif: z.enum(["Yes", "No"], { errorMap: () => ({ message: "Aktif harus Yes atau No" }) }),
+  name: z.string().max(50, "Nama maksimal 50 karakter"),
+  isActive: z.enum(["YES", "NO"]).optional(),
 });
 
 const TambahSatuan = () => {
   const navigate = useNavigate();
-  const { id: paramId } = useParams(); // ambil id dari URL
+  const { id: paramId } = useParams();
 
   const [form, setForm] = useState({
-    id: "",
-    satuan: "",
-    aktif: "Yes",
+    name: "",
+    isActive: "YES",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
 
-  // Fetch data jika paramId tersedia
   useEffect(() => {
     if (paramId) {
       axios
-        .get(`http://localhost:3000/satuan/${paramId}`)
+        .get(`http://localhost:3000/api/unit/${paramId}`)
         .then((res) => {
           setForm({
-            id: res.data.id,
-            satuan: res.data.satuan,
-            aktif: res.data.aktif,
+            name: res.data.name,
+            isActive: res.data.isActive,
           });
         })
         .catch((err) => {
@@ -59,25 +56,20 @@ const TambahSatuan = () => {
       return;
     }
 
-    if (paramId) {
-      // Update jika ada id
-      axios
-        .put(`http://localhost:3000/satuan/${paramId}`, result.data)
-        .then(() => {
-          console.log("Data berhasil diubah");
-          navigate("/dashboard/satuan");
-        })
-        .catch((err) => console.log(err));
-    } else {
-      // Tambah jika tidak ada id
-      axios
-        .post("http://localhost:3000/satuan", result.data)
-        .then(() => {
-          console.log("Data berhasil ditambahkan");
-          navigate("/dashboard/satuan");
-        })
-        .catch((err) => console.log(err));
-    }
+    const payload = result.data;
+
+    const url = paramId
+      ? `http://localhost:3000/api/unit/${paramId}`
+      : "http://localhost:3000/api/unit";
+
+    const method = paramId ? axios.put : axios.post;
+
+    method(url, payload)
+      .then(() => {
+        console.log(paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan");
+        navigate("/dashboard/satuan");
+      })
+      .catch((err) => console.error("Gagal menyimpan:", err));
   };
 
   return (
@@ -88,43 +80,29 @@ const TambahSatuan = () => {
           className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-md space-y-6"
         >
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Kode Satuan</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Nama Satuan</label>
             <input
               type="text"
               autoComplete="off"
-              name="id"
-              value={form.id}
-              onChange={handleChange}
-              disabled={!!paramId} // disable jika sedang edit
-              className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C0AFF] transition ${paramId ? "bg-gray-100 cursor-not-allowed" : "border-gray-300"}`}
-            />
-            {errors.id && <p className="text-sm text-red-500 mt-1">{errors.id}</p>}
-            {paramId && <p className="text-sm text-gray-500 mt-1">kode satuan tidak dapat diubah</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Satuan</label>
-            <input
-              type="text"
-              autoComplete="off"
-              name="satuan"
-              value={form.satuan}
+              name="name"
+              value={form.name}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6C0AFF] transition"
             />
-            {errors.satuan && <p className="text-sm text-red-500 mt-1">{errors.satuan}</p>}
+            {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Aktif</label>
             <select
-              name="aktif"
-              value={form.aktif}
+              name="isActive"
+              value={form.isActive}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#6C0AFF] transition"
             >
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
             </select>
-            {errors.aktif && <p className="text-sm text-red-500 mt-1">{errors.aktif}</p>}
+            {errors.isActive && <p className="text-sm text-red-500 mt-1">{errors.isActive}</p>}
           </div>
           <div className="flex justify-end gap-3 pt-4">
             <button
