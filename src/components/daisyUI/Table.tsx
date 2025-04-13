@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getPagination } from "../layouts/Pagination";
+import { Link } from "react-router-dom";
 
 type TableProps<T> = {
   datas: {
@@ -7,9 +8,11 @@ type TableProps<T> = {
     columns: string[];
     data: T[];
   }[];
+  to: string;
+  onDelete: (id: string) => void;
 };
 
-const Table = <T extends Record<string, any>>({ datas }: TableProps<T>) => {
+const Table = <T extends Record<string, any>>({ datas, to, onDelete }: TableProps<T>) => {
   if (!datas || datas.length === 0)
     return <p className="text-center">Data tidak tersedia</p>;
 
@@ -19,6 +22,14 @@ const Table = <T extends Record<string, any>>({ datas }: TableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  // 🔁 Atur ulang currentPage jika melebihi total halaman baru
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [data.length, totalPages]);
+
   const displayedData = data.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -40,23 +51,37 @@ const Table = <T extends Record<string, any>>({ datas }: TableProps<T>) => {
             </tr>
           </thead>
           <tbody>
-            {displayedData.map((item, rowIndex) => (
-              <tr key={rowIndex} className="bg-white hover:bg-gray-100 text-center">
-                {Object.values(item).map((value, colIndex) => (
-                  <td key={colIndex} className="p-2 border border-gray-300">
-                    {value}
-                  </td>
-                ))}
-                <td className="p-2 border border-gray-300">
-                  <button className="cursor-pointer px-2 py-1 bg-yellow-500 text-white rounded mr-2">
-                    ✏️
-                  </button>
-                  <button className="cursor-pointer px-2 py-1 bg-red-500 text-white rounded">
-                    🗑️
-                  </button>
+            {displayedData.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length + 1} className="text-center p-4">
+                  Tidak ada data pada halaman ini.
                 </td>
               </tr>
-            ))}
+            ) : (
+              displayedData.map((item, rowIndex) => (
+                <tr key={rowIndex} className="bg-white hover:bg-gray-100 text-center">
+                  {Object.values(item).map((value, colIndex) => (
+                    <td key={colIndex} className="p-2 border border-gray-300">
+                      {value}
+                    </td>
+                  ))}
+                  <td className="p-2 border border-gray-300">
+                    <Link
+                      to={`${to}/${item.id}`}
+                      className="cursor-pointer px-2 py-1 bg-yellow-500 text-white rounded mr-2"
+                    >
+                      ✏️
+                    </Link>
+                    <button
+                      onClick={() => onDelete(item.id)}
+                      className="cursor-pointer px-2 py-1 bg-red-500 text-white rounded"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -71,7 +96,6 @@ const Table = <T extends Record<string, any>>({ datas }: TableProps<T>) => {
           Previous
         </button>
 
-        {/* Page numbers */}
         {getPagination(currentPage, totalPages).map((item, index) => (
           <button
             key={index}

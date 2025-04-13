@@ -5,7 +5,11 @@ import TampilanUtama from "../TampilanUtama";
 const Kategori = () => {
   return (
     <TampilanUtama link="/dashboard/kategori/tambah-kategori">
-      <Table datas={dataKategori} />
+      <Table
+        datas={dataKategori}
+        to=""
+        onDelete={() => {}}
+      />
     </TampilanUtama>
   );
 };

@@ -164,6 +164,10 @@ export const getAllDataSatuan = () => {
   return datas;
 };
 
+export const deleteSatuan = (id: string) => {
+  return axios.delete(`http://localhost:3000/satuan/${id}`);
+};
+
 export const dataKategori = [
   {
     title: "kategori",

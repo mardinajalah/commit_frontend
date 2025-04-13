@@ -23,6 +23,7 @@ const LayoutRouter = () => {
       <Route path="/barang/tambah-barang" element={<TambahBarang />} />
       <Route path="/satuan" element={<Satuan />} />
       <Route path="/satuan/tambah-satuan" element={<TambahSatuan />} />
+      <Route path="/satuan/tambah-satuan/:id" element={<TambahSatuan />} />
       <Route path="/anggota" element={<Anggota />} />
       <Route path="/kategori" element={<Kategori />} />
       <Route path="/kategori/tambah-kategori" element={<TambahKategori />} />
