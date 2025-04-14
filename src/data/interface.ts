@@ -52,3 +52,16 @@ export interface BarangType {
     isActive: string;
   }[];
 }
+
+export interface SupplierType {
+  tiitle: string;
+  header: string[];
+  data: {
+    id: number;
+    name: string;
+    address: string;
+    phoneNumber: number;
+    company: string;
+    isActive: string;
+  };
+}

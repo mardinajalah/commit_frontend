@@ -195,3 +195,16 @@ export const getAllDataAnggota = () => {
 export const deleteAnggota = (id: string) => {
   return axios.delete(`http://localhost:3000/api/member/${id}`);
 };
+
+export const getAllDataSupplier = () => {
+  const datas = axios
+    .get("http://localhost:3000/api/supplier")
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+};
+
+export const deleteSupplier = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/supplier/${id}`);
+};

@@ -11,8 +11,9 @@ import DataNotFound from "@/components/pages/OtherPage/DataNotFound";
 import TambahKategori from "@/components/pages/master-data/kategori/TambahKategori";
 import Anggota from "@/components/pages/master-data/anggota";
 import TambahAnggota from "@/components/pages/master-data/anggota/TambahAnggota";
-
 import TambahSatuan from "@/components/pages/master-data/satuan/TambahSatuan";
+import Supplier from "@/components/pages/master-data/supplier";
+import TambahSupplier from "@/components/pages/master-data/supplier/TambahSupplier";
 
 const LayoutRouter = () => {
   return (
@@ -29,13 +30,13 @@ const LayoutRouter = () => {
       <Route path="anggota" element={<Anggota />} />
       <Route path="kategori" element={<Kategori />} />
       <Route path="kategori/tambah-kategori" element={<TambahKategori />} />
-      <Route
-        path="kategori/tambah-kategori/:id"
-        element={<TambahKategori />}
-      />
+      <Route path="kategori/tambah-kategori/:id" element={<TambahKategori />} />
       <Route path="anggota" element={<Anggota />} />
       <Route path="anggota/tambah-anggota" element={<TambahAnggota />} />
       <Route path="anggota/tambah-anggota/:nip" element={<TambahAnggota />} />
+      <Route path="supplier" element={<Supplier />} />
+      <Route path="supplier/tambah-supplier" element={<TambahSupplier />} />
+      <Route path="supplier/tambah-supplier/:id" element={<TambahSupplier />} />
 
       <Route path="*" element={<DataNotFound />} />
     </Routes>
