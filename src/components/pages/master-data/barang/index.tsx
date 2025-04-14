@@ -22,7 +22,7 @@ const Barang = () => {
       <TampilanUtama link='/dashboard/barang/tambah-barang'>
         <Table
           datas={tableData}
-          to=''
+          to='/dashboard/barang/tambah-barang'
           onDelete={() => {}}
         />
       </TampilanUtama>

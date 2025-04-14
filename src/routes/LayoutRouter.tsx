@@ -24,6 +24,7 @@ const LayoutRouter = () => {
       <Route path="hutang-penjual" element={<HutangPenjual />} />
       <Route path="barang" element={<Barang />} />
       <Route path="barang/tambah-barang" element={<TambahBarang />} />
+      <Route path="barang/tambah-barang/:id" element={<TambahBarang />} />
       <Route path="satuan" element={<Satuan />} />
       <Route path="satuan/tambah-satuan" element={<TambahSatuan />} />
       <Route path="satuan/tambah-satuan/:id" element={<TambahSatuan />} />
