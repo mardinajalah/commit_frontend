@@ -54,7 +54,7 @@ export interface BarangType {
 }
 
 export interface SupplierType {
-  tiitle: string;
+  title: string;
   header: string[];
   data: {
     id: number;
@@ -63,5 +63,18 @@ export interface SupplierType {
     phoneNumber: number;
     company: string;
     isActive: string;
+  };
+}
+
+export interface BarangTitipanType {
+  title: string;
+  header: string[];
+  data: {
+    id: number;
+    vendor: string;
+    name: string;
+    category: string;
+    sellPrice: DoubleRange;
+    profitPercent: DoubleRange;
   };
 }

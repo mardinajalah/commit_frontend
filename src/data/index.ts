@@ -208,3 +208,16 @@ export const getAllDataSupplier = () => {
 export const deleteSupplier = (id: string) => {
   return axios.delete(`http://localhost:3000/api/supplier/${id}`);
 };
+
+export const getAllDataBarangTitipan = () => {
+  const datas = axios
+    .get("http://localhost:3000/api/vendor_product")
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+};
+
+export const deleteBarangTitipan = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/vendor_product/${id}`);
+};
