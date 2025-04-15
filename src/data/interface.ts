@@ -78,3 +78,16 @@ export interface BarangTitipanType {
     profitPercent: DoubleRange;
   };
 }
+
+export interface PenitipType {
+  title: string;
+  header: string;
+  data: {
+    id: number;
+    name: string;
+    phoneNumber: number;
+    address: string;
+    isActive: string;
+    listProduct: string;
+  };
+}

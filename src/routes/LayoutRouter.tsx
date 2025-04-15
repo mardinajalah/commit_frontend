@@ -16,6 +16,8 @@ import Supplier from "@/components/pages/master-data/supplier";
 import TambahSupplier from "@/components/pages/master-data/supplier/TambahSupplier";
 import BarangTitipan from "@/components/pages/master-data/BarangTitipan";
 import TambahBarangTitipan from "@/components/pages/master-data/BarangTitipan/TambahBarangTitipan";
+import Penitip from "@/components/pages/master-data/Penitip";
+import TambahPenitip from "@/components/pages/master-data/Penitip/TambahPenitip";
 
 const LayoutRouter = () => {
   return (
@@ -45,6 +47,14 @@ const LayoutRouter = () => {
         path="barang-titipan/tambah-barang-titipan"
         element={<TambahBarangTitipan />}
       />
+      <Route
+        path="barang-titipan/tambah-barang-titipan/:id"
+        element={<TambahBarangTitipan />}
+      />
+
+      <Route path="penitip" element={<Penitip />} />
+      <Route path="penitip/tambah-penitip" element={<TambahPenitip />} />
+      <Route path="penitip/tambah-penitip/:id" element={<TambahPenitip />} />
 
       <Route path="*" element={<DataNotFound />} />
     </Routes>

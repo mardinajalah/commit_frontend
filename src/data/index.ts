@@ -221,3 +221,16 @@ export const getAllDataBarangTitipan = () => {
 export const deleteBarangTitipan = (id: string) => {
   return axios.delete(`http://localhost:3000/api/vendor_product/${id}`);
 };
+
+export const getAllDataPenitip = () => {
+  const datas = axios
+    .get("http://localhost:3000/api/vendor")
+    .then((res) => res.data)
+    .catch((err) => (console.log(err), []));
+
+  return datas;
+};
+
+export const deletePenitip = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/vendor/${id}`);
+};

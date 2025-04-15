@@ -8,7 +8,7 @@ interface Penitip {
   id: number;
   name: string;
   address: string;
-  phone: string;
+  phoneNumber: string;
 }
 
 interface KategoriOption {
@@ -318,7 +318,7 @@ const TambahBarangTitipan = () => {
                   onClick={() => selectPenitip(penitip)}
                   className="p-2 hover:bg-gray-100 cursor-pointer"
                 >
-                  {penitip.name} - {penitip.phone}
+                  {penitip.name} - {penitip.phoneNumber}
                 </div>
               ))}
             </div>
@@ -338,7 +338,7 @@ const TambahBarangTitipan = () => {
             </div>
             <div>
               <p className="font-medium">No. Telp</p>
-              <p>{selectedPenitip.phone}</p>
+              <p>{selectedPenitip.phoneNumber}</p>
             </div>
             <div className="col-span-2">
               <p className="font-medium">Alamat</p>
