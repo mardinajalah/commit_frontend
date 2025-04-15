@@ -141,6 +141,7 @@ const TambahBarang = () => {
     }
 
     const payload = result.data;
+    console.log(payload);
     
     const url = paramId ? `http://localhost:3000/api/product/${paramId}` : 'http://localhost:3000/api/product';
     const method = paramId ? axios.put : axios.post;
