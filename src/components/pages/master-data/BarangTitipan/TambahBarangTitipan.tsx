@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import axios from "axios";
@@ -45,6 +45,7 @@ const formSchema = z.object({
 });
 
 const TambahBarangTitipan = () => {
+  const { id: paramId } = useParams();
   const navigate = useNavigate();
 
   // State untuk penitip
@@ -74,6 +75,24 @@ const TambahBarangTitipan = () => {
     newBarang?: Partial<Record<keyof BarangTitipan, string>>;
     items?: Record<number, Partial<Record<keyof BarangTitipan, string>>>;
   }>({});
+
+  useEffect(() => {
+    if (paramId) {
+      axios
+        .get(`http://localhost:3000/api/vendor_product/${paramId}`)
+        .then((res) => {
+          const data = res.data;
+          setNewBarang({
+            name: data.name,
+            category: data.category,
+            categoryId: data.categoryId,
+            sellPrice: data.sellPrice,
+            profitPercent: data.profitPercent,
+          });
+        })
+        .catch((err) => console.error("Gagal mengambil data barang:", err));
+    }
+  }, [paramId]);
 
   // Fetch kategori saat komponen dimount
   useEffect(() => {
@@ -275,7 +294,6 @@ const TambahBarangTitipan = () => {
 
     Promise.all(promises)
       .then(() => {
-        alert("Data berhasil disimpan");
         navigate("/dashboard/barang-titipan");
       })
       .catch((err) => {
@@ -285,6 +303,22 @@ const TambahBarangTitipan = () => {
             (err.response?.data?.message || err.message)
         );
       });
+
+    const setPayload = result.data;
+    const url = paramId
+      ? `http://localhost:3000/api/vendor_product/${paramId}`
+      : "http://localhost:3000/api/vendor_product";
+
+    const method = paramId ? axios.put : axios.post;
+
+    method(url, setPayload)
+      .then(() => {
+        console.log(
+          paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan"
+        );
+        navigate("/dashboard/barang-titipan");
+      })
+      .catch((err) => console.error("Gagal menyimpan:", err));
   };
 
   return (
@@ -296,44 +330,46 @@ const TambahBarangTitipan = () => {
         <h2 className="text-2xl font-bold mb-4 text-gray-800">Titipan Baru</h2>
 
         {/* Pencarian Penitip */}
-        <div className="mb-6 relative">
-          <label className="block text-gray-700 mb-1">Cari Penitip</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari penitip"
-              className="flex-1 p-2 border border-gray-300 rounded-lg"
-            />
-            <button
-              type="button"
-              onClick={handleSearch}
-              className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-            >
-              Cari
-            </button>
-          </div>
-
-          {/* Hasil pencarian penitip */}
-          {showPenitipResults && penitipResults.length > 0 && (
-            <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg">
-              {penitipResults.map((penitip) => (
-                <div
-                  key={penitip.id}
-                  onClick={() => selectPenitip(penitip)}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  {penitip.name} - {penitip.phoneNumber}
-                </div>
-              ))}
+        {!paramId && (
+          <div className="mb-6 relative">
+            <label className="block text-gray-700 mb-1">Cari Penitip</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari penitip"
+                className="flex-1 p-2 border border-gray-300 rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+              >
+                Cari
+              </button>
             </div>
-          )}
 
-          {errors.form && (
-            <p className="text-red-500 text-sm mt-1">{errors.form}</p>
-          )}
-        </div>
+            {/* Hasil pencarian penitip */}
+            {showPenitipResults && penitipResults.length > 0 && (
+              <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg">
+                {penitipResults.map((penitip) => (
+                  <div
+                    key={penitip.id}
+                    onClick={() => selectPenitip(penitip)}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {penitip.name} - {penitip.phoneNumber}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {errors.form && (
+              <p className="text-red-500 text-sm mt-1">{errors.form}</p>
+            )}
+          </div>
+        )}
 
         {/* Info Penitip */}
         {selectedPenitip && (
@@ -456,15 +492,17 @@ const TambahBarangTitipan = () => {
               </div>
             </div>
 
-            <div className="mt-4">
-              <button
-                type="button"
-                onClick={addBarang}
-                className="px-4 py-2 bg-[#6C0AFF] text-white rounded-lg hover:bg-[#5a00e6] transition"
-              >
-                + Tambah Barang
-              </button>
-            </div>
+            {!paramId && (
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={addBarang}
+                  className="px-4 py-2 bg-[#6C0AFF] text-white rounded-lg hover:bg-[#5a00e6] transition"
+                >
+                  + Tambah Barang
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Tabel Daftar Barang */}
