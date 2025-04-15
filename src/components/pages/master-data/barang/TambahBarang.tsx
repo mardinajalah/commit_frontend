@@ -3,49 +3,46 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import axios from 'axios';
 
-interface DataOptionsType {
+type DataOptionsType = {
   id: number;
   name: string;
   isActive: string;
-}
+}[]
+
 
 const formSchema = z.object({
-  name: z.string().max(50, 'Nama maksimal 50 karakter'),
-  hargaBeli: z.coerce.number().nonnegative('Harga beli tidak boleh negatif'),
-  hargaEcer: z.coerce.number().nonnegative('Harga ecer tidak boleh negatif'),
-  hargaGrosir: z.coerce.number().nonnegative('Harga grosir tidak boleh negatif'),
-  stok: z.coerce.number().nonnegative('Stok tidak boleh negatif'),
-  stokMinimal: z.coerce.number().nonnegative('Stok minimal tidak boleh negatif'),
-  barcode: z.string().max(20, 'Nomor barcode maksimal 20 karakter'),
-  gambar: z.string().max(255, 'URL gambar maksimal 255 karakter').optional().or(z.literal('')),
-  category: z.string().max(50, 'Kategori maksimal 50 karakter'),
-  categoryId: z.coerce.number().nonnegative('ID kategori tidak boleh negatif'),
-  size: z.coerce.number().max(20, 'Ukuran maksimal 20 karakter'),
-  unit: z.string().max(20, 'Satuan maksimal 20 karakter'),
+  name: z.string().min(1, 'Nama harus diisi').max(50, 'Nama maksimal 50 karakter'),
+  purchasePrice: z.number().nonnegative('Harga beli tidak boleh negatif').min(1, 'Harga beli harus diisi'),
+  retailPrice: z.number().nonnegative('Harga ecer tidak boleh negatif').min(1, 'Harga ecer harus diisi'),
+  wholesalePrice: z.number().nonnegative('Harga grosir tidak boleh negatif').min(1, 'Harga grosir harus diisi'),
+  stock: z.number().nonnegative('Stok tidak boleh negatif').min(1, 'Stok harus diisi'),
+  minStock: z.number().nonnegative('Stok minimal tidak boleh negatif').min(1, 'Stok minimal harus diisi'),
+  barcode: z.string().min(1, 'Nomor barcode harus diisi').max(20, 'Nomor barcode maksimal 20 karakter'),
+  image: z.string().max(255, 'URL gambar maksimal 255 karakter').optional(),
+  categoryId: z.number().max(50, 'Kategori maksimal 50 karakter').min(1, 'Kategori harus diisi'),
+  size: z.number().max(20, 'Ukuran maksimal 20 karakter').min(1, 'Ukuran harus diisi'),
+  unitId: z.number().max(20, 'Satuan maksimal 20 karakter').min(1, 'Satuan harus diisi'),
   isActive: z.enum(['YES', 'NO']),
 });
 
 const TambahBarang = () => {
-  const [category, setCategory] = useState<DataOptionsType[]>([]);
-  const [unit, setUnit] = useState<DataOptionsType[]>([]);
+  const [category, setCategory] = useState<DataOptionsType>([]);
+  const [unit, setUnit] = useState<DataOptionsType>([]);
   const navigate = useNavigate();
   const { id: paramId } = useParams();
 
-  const randomnumber = Math.floor(Math.random() * 1000);
-
   const [form, setForm] = useState({
     name: '',
-    hargaBeli: '',
-    hargaEcer: '',
-    hargaGrosir: '',
-    stok: '',
-    stokMinimal: '',
-    barcode: `${randomnumber}`,
+    purchasePrice: '',
+    retailPrice: '',
+    wholesalePrice: '',
+    stock: '',
+    minStock: '',
+    barcode: '',
     gambar: '',
-    category: '',
-    categoryId: '1',
+    categoryId: '',
     size: '',
-    unit: '',
+    unitId: '',
     isActive: 'YES',
   });
 
@@ -59,17 +56,16 @@ const TambahBarang = () => {
           const data = res.data;
           setForm({
             name: data.name,
-            hargaBeli: data.purchasePrice?.toString(),
-            hargaEcer: data.retailPrice?.toString(),
-            hargaGrosir: data.wholesalePrice?.toString(),
-            stok: data.stock?.toString(),
-            stokMinimal: data.minStock?.toString(),
+            purchasePrice: data.purchasePrice,
+            retailPrice: data.retailPrice,
+            wholesalePrice: data.wholesalePrice,
+            stock: data.stock,
+            minStock: data.minStock,
             barcode: data.barcode,
             gambar: data.image,
-            category: data.category,
-            categoryId: data.categoryId?.toString(),
-            size: data.size?.toString(),
-            unit: data.unit,
+            categoryId: data.categoryId,
+            size: data.size,
+            unitId: data.unitId,
             isActive: data.isActive,
           });
         })
@@ -105,7 +101,7 @@ const TambahBarang = () => {
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
-
+    
     setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
@@ -118,7 +114,21 @@ const TambahBarang = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = formSchema.safeParse(form);
+    const dataForm = {
+      name: form.name,
+      purchasePrice: Number(form.purchasePrice),
+      retailPrice: Number(form.retailPrice),
+      wholesalePrice: Number(form.wholesalePrice),
+      stock: Number(form.stock),
+      minStock: Number(form.minStock),
+      barcode: form.barcode,
+      image: form.gambar,
+      categoryId: Number(form.categoryId),
+      size: Number(form.size),
+      unitId: Number(form.unitId),
+      isActive: form.isActive
+    }
+    const result = formSchema.safeParse(dataForm);
 
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof typeof form, string>> = {};
@@ -130,22 +140,8 @@ const TambahBarang = () => {
       return;
     }
 
-    const payload = {
-      name: result.data.name,
-      purchasePrice: result.data.hargaBeli,
-      retailPrice: result.data.hargaEcer,
-      wholesalePrice: result.data.hargaGrosir,
-      stock: result.data.stok,
-      minStock: result.data.stokMinimal,
-      barcode: result.data.barcode,
-      image: result.data.gambar || null, // optional
-      category: result.data.category,
-      categoryId: result.data.categoryId,
-      size: result.data.size,
-      unit: result.data.unit,
-      isActive: result.data.isActive,
-    };
-    console.log(payload);
+    const payload = result.data;
+    
     const url = paramId ? `http://localhost:3000/api/product/${paramId}` : 'http://localhost:3000/api/product';
     const method = paramId ? axios.put : axios.post;
 
@@ -191,8 +187,8 @@ const TambahBarang = () => {
           <div>
             <label className='block text-gray-700 mb-1'>Kategori</label>
             <select
-              name='category'
-              value={form.category}
+              name='categoryId'
+              value={form.categoryId}
               onChange={handleChange}
               className='w-full p-2 border border-gray-300 rounded-lg bg-white'
             >
@@ -200,12 +196,13 @@ const TambahBarang = () => {
               {category.map((data) => (
                 <option
                   key={data.id}
-                  value={data.name}
+                  value={data.id}
                 >
                   {data.name}
                 </option>
               ))}
             </select>
+            {errors.categoryId && ( <p className='text-red-500 text-sm'>{errors.categoryId}</p>)}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Ukuran</label>
@@ -217,12 +214,13 @@ const TambahBarang = () => {
               placeholder='Masukkan ukuran'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.size && <p className='text-red-500 text-sm'>{errors.size}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Satuan</label>
             <select
-              name='unit'
-              value={form.unit}
+              name='unitId'
+              value={form.unitId}
               onChange={handleChange}
               className='w-full p-2 border border-gray-300 rounded-lg bg-white'
             >
@@ -230,67 +228,85 @@ const TambahBarang = () => {
               {unit.map((data) => (
                 <option
                   key={data.id}
-                  value={data.name}
+                  value={data.id}
                 >
                   {data.name}
                 </option>
               ))}
             </select>
+            {errors.unitId && <p className='text-red-500 text-sm'>{errors.unitId}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Harga beli</label>
             <input
               type='text'
-              name='hargaBeli'
-              value={form.hargaBeli}
+              name='purchasePrice'
+              value={form.purchasePrice}
               onChange={handleChange}
-              placeholder='Masukkan harga cash'
+              placeholder='Masukkan harga beli'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.purchasePrice && <p className='text-red-500 text-sm'>{errors.purchasePrice}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Harga Ecer</label>
             <input
               type='text'
-              name='hargaEcer'
-              value={form.hargaEcer}
+              name='retailPrice'
+              value={form.retailPrice}
               onChange={handleChange}
-              placeholder='Masukkan harga cashbon'
+              placeholder='Masukkan harga ecer'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.retailPrice && <p className='text-red-500 text-sm'>{errors.retailPrice}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Harga Grosir</label>
             <input
               type='text'
-              name='hargaGrosir'
-              value={form.hargaGrosir}
+              name='wholesalePrice'
+              value={form.wholesalePrice}
               onChange={handleChange}
               placeholder='Masukkan harga grosir'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.wholesalePrice && <p className='text-red-500 text-sm'>{errors.wholesalePrice}</p>}
+          </div>
+          <div>
+            <label className='block text-gray-700 mb-1'>Barcode</label>
+            <input
+              type='text'
+              name='barcode'
+              value={form.barcode}
+              onChange={handleChange}
+              placeholder='Masukkan barcode'
+              className='w-full p-2 border border-gray-300 rounded-lg'
+            />
+            {errors.barcode && <p className='text-red-500 text-sm'>{errors.barcode}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Stok</label>
             <input
               type='text'
-              name='stok'
-              value={form.stok}
+              name='stock'
+              value={form.stock}
               onChange={handleChange}
               placeholder='Masukkan stok'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.stock && <p className='text-red-500 text-sm'>{errors.stock}</p>}
           </div>
           <div>
             <label className='block text-gray-700 mb-1'>Minimal Stok</label>
             <input
               type='text'
-              name='stokMinimal'
-              value={form.stokMinimal}
+              name='minStock'
+              value={form.minStock}
               onChange={handleChange}
               placeholder='Masukkan minimal stok'
               className='w-full p-2 border border-gray-300 rounded-lg'
             />
+            {errors.minStock && <p className='text-red-500 text-sm'>{errors.minStock}</p>}
           </div>
           <div className='flex items-center gap-3 mt-3'>
             <label className='flex items-center gap-3 mt-3 cursor-pointer'>

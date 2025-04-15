@@ -157,6 +157,10 @@ export const getAllDataBarang = () => {
   return datas;
 };
 
+export const deleteBarang = (id: string) => {
+  return axios.delete(`http://localhost:3000/api/product/${id}`);
+};
+
 export const getAllDataSatuan = () => {
   const datas = axios
     .get("http://localhost:3000/api/unit")

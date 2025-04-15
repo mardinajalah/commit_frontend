@@ -1,4 +1,4 @@
-import { getAllDataBarang } from '@/data';
+import { deleteBarang, getAllDataBarang } from '@/data';
 import TampilanUtama from '../TampilanUtama';
 import Table from '@/components/daisyUI/Table';
 import { useEffect, useState } from "react";
@@ -16,6 +16,17 @@ const Barang = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Yakin ingin menghapus data ini?")) {
+      try {
+        await deleteBarang(id);
+        fetchData();
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+      }
+    }
+  };
   
   return (
     <>
@@ -23,7 +34,7 @@ const Barang = () => {
         <Table
           datas={tableData}
           to='/dashboard/barang/tambah-barang'
-          onDelete={() => {}}
+          onDelete={handleDelete}
         />
       </TampilanUtama>
     </>

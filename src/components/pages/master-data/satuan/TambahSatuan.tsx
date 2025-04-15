@@ -5,7 +5,7 @@ import { z } from "zod";
 
 // Schema validasi hanya untuk name dan isActive (optional)
 const formSchema = z.object({
-  name: z.string().max(50, "Nama maksimal 50 karakter"),
+  name: z.string().min(1, "Nama harus diisi").max(50, "Nama maksimal 50 karakter"),
   isActive: z.enum(["YES", "NO"]).optional(),
 });
 
