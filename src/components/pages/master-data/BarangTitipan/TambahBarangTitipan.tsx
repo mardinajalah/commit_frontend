@@ -381,8 +381,27 @@ const TambahBarangTitipan = () => {
                 <label className="block text-gray-700 mb-1">Kategori</label>
                 <select
                   name="category"
-                  value={newBarang.category}
-                  onChange={handleBarangChange}
+                  value={newBarang.categoryId}
+                  onChange={(e) => {
+                    const selectedId = parseInt(e.target.value);
+                    const selectedCategory = categories.find(
+                      (cat) => cat.id === selectedId
+                    );
+
+                    setNewBarang((prev) => ({
+                      ...prev,
+                      categoryId: selectedId,
+                      category: selectedCategory?.name || "",
+                    }));
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      newBarang: {
+                        ...prev.newBarang,
+                        category: undefined,
+                      },
+                    }));
+                  }}
                   className="w-full p-2 border border-gray-300 rounded-lg bg-white"
                 >
                   <option value="">Pilih kategori</option>
@@ -392,6 +411,7 @@ const TambahBarangTitipan = () => {
                     </option>
                   ))}
                 </select>
+
                 {errors.newBarang?.category && (
                   <p className="text-red-500 text-sm">
                     {errors.newBarang.category}
