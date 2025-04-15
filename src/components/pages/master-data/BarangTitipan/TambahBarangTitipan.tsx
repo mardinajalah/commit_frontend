@@ -32,7 +32,6 @@ const barangSchema = z.object({
     .min(1, "Nama barang harus diisi")
     .max(50, "Nama maksimal 50 karakter"),
   category: z.string().min(1, "Kategori harus dipilih"),
-  categoryId: z.coerce.number().nonnegative("ID kategori tidak valid"),
   sellPrice: z.coerce.number().positive("Harga jual harus lebih dari 0"),
   profitPercent: z.coerce
     .number()
@@ -196,7 +195,6 @@ const TambahBarangTitipan = () => {
   // Submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!selectedPenitip) {
       setErrors((prev) => ({
         ...prev,
@@ -255,29 +253,37 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // Format data untuk API
-    const apiPayload = {
-      penitipId: selectedPenitip.id,
-      barang: barangList.map((item) => ({
-        vendor: selectedPenitip.id.toString(),
+    // Kirim data satu per satu (bukan array)
+    // Dari error terlihat bahwa API mengharapkan satu objek per request, bukan array
+
+    const promises = barangList.map((item) => {
+      console.log(item.categoryId);
+      const singleItemPayload = {
+        vendorId: selectedPenitip.id,
         name: item.name,
-        category: item.category,
         categoryId: item.categoryId,
         sellPrice: parseFloat(item.sellPrice.toString()),
         profitPercent: parseFloat(item.profitPercent.toString()),
-      })),
-    };
+        entryDate: new Date().toISOString(), // Tambahkan entryDate yang diperlukan oleh skema Prisma
+      };
 
-    // Kirim data ke API
-    axios
-      .post("http://localhost:3000/api/vendor_product", apiPayload)
+      return axios.post(
+        "http://localhost:3000/api/vendor_product",
+        singleItemPayload
+      );
+    });
+
+    Promise.all(promises)
       .then(() => {
         alert("Data berhasil disimpan");
-        navigate("/dashboard/barang-titipan"); // Ganti dengan route yang sesuai
+        navigate("/dashboard/barang-titipan");
       })
       .catch((err) => {
-        console.error("Gagal menyimpan:", err);
-        alert("Gagal menyimpan data");
+        console.error("Gagal menyimpan:", err.response?.data || err.message);
+        alert(
+          "Gagal menyimpan data: " +
+            (err.response?.data?.message || err.message)
+        );
       });
   };
 
@@ -381,7 +387,7 @@ const TambahBarangTitipan = () => {
                 >
                   <option value="">Pilih kategori</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.name}>
+                    <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>
                   ))}

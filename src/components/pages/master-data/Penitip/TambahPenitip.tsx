@@ -8,6 +8,7 @@ const formSchema = z.object({
   name: z.string().max(50, "Nama maksimal 50 karakter"),
   address: z.string(),
   phoneNumber: z.string(),
+  listProduct: z.string(),
   isActive: z.enum(["YES", "NO"]).optional(),
 });
 
@@ -19,6 +20,7 @@ const TambahPenitip = () => {
     name: "",
     address: "",
     phoneNumber: "",
+    listProduct: "",
     isActive: "YES",
   });
 

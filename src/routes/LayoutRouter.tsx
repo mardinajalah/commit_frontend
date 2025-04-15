@@ -33,15 +33,19 @@ const LayoutRouter = () => {
       <Route path="satuan/tambah-satuan" element={<TambahSatuan />} />
       <Route path="satuan/tambah-satuan/:id" element={<TambahSatuan />} />
       <Route path="anggota" element={<Anggota />} />
+
       <Route path="kategori" element={<Kategori />} />
       <Route path="kategori/tambah-kategori" element={<TambahKategori />} />
       <Route path="kategori/tambah-kategori/:id" element={<TambahKategori />} />
+
       <Route path="anggota" element={<Anggota />} />
       <Route path="anggota/tambah-anggota" element={<TambahAnggota />} />
       <Route path="anggota/tambah-anggota/:nip" element={<TambahAnggota />} />
+
       <Route path="supplier" element={<Supplier />} />
       <Route path="supplier/tambah-supplier" element={<TambahSupplier />} />
       <Route path="supplier/tambah-supplier/:id" element={<TambahSupplier />} />
+
       <Route path="barang-titipan" element={<BarangTitipan />} />
       <Route
         path="barang-titipan/tambah-barang-titipan"
