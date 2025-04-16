@@ -10,9 +10,26 @@ const Penitip = () => {
   >([]);
 
   const fetchData = () => {
-    getAllDataPenitip().then((res) => {
-      setTableData([res]);
-    });
+    getAllDataPenitip()
+      .then((res) => {
+        // Memastikan data memiliki kolom 'listproduct' untuk tombol Detail Produk
+        if (res && res.data && Array.isArray(res.data)) {
+          const dataWithListProduct = {
+            ...res,
+            data: res.data.map((item) => ({
+              ...item,
+              listproduct: "Detail Produk", // Menambahkan properti 'listproduct' untuk setiap item
+            })),
+          };
+
+          setTableData([dataWithListProduct]);
+        } else {
+          console.error("Format data tidak valid:", res);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   };
 
   useEffect(() => {
@@ -20,13 +37,27 @@ const Penitip = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (confirm("Yakin ingin menghapus data ini?")) {
-      try {
-        await deletePenitip(id);
-        fetchData(); // Refresh data
-      } catch (err) {
-        console.error("Gagal menghapus data:", err);
+    try {
+      // Periksa apakah id valid
+      if (!id) {
+        console.error("ID tidak valid:", id);
+        return;
       }
+
+      // Konfirmasi sebelum menghapus
+      if (window.confirm("Yakin ingin menghapus data ini?")) {
+        console.log("Menghapus penitip dengan ID:", id);
+
+        // Panggil fungsi delete
+        const result = await deletePenitip(id);
+        console.log("Hasil delete:", result);
+
+        // Refresh data setelah delete berhasil
+        fetchData();
+      }
+    } catch (err) {
+      console.error("Gagal menghapus data:", err);
+      alert("Gagal menghapus data. Silahkan coba lagi.");
     }
   };
 
@@ -35,8 +66,9 @@ const Penitip = () => {
       <TampilanUtama link="/dashboard/penitip/tambah-penitip">
         <Table
           datas={tableData}
-          to="/dashboard/penitip/tambah-penitip"
-          onDelete={handleDelete}
+          to="/dashboard/penitip/detail-produk" // Route untuk detail produk
+          onDelete={handleDelete} // Pastikan fungsi handleDelete dilewatkan dengan benar
+          idFild="id" // Pastikan nama field ID sesuai dengan data Anda
         />
       </TampilanUtama>
     </>

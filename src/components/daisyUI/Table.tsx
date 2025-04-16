@@ -76,7 +76,7 @@ const Table = ({ datas, to, onDelete, idFild = "id" }: TableProps) => {
                         rowIndex + 1 + (currentPage - 1) * itemsPerPage
                       ) : column.toLowerCase() === "listproduct" ? (
                         <Link
-                          to={`${to}/detail/${item[idFild]}`}
+                          to={`${to}/${item[idFild]}`}
                           className="text-blue-600 hover:underline"
                         >
                           Detail Produk

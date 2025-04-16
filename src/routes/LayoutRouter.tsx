@@ -18,6 +18,7 @@ import BarangTitipan from "@/components/pages/master-data/BarangTitipan";
 import TambahBarangTitipan from "@/components/pages/master-data/BarangTitipan/TambahBarangTitipan";
 import Penitip from "@/components/pages/master-data/Penitip";
 import TambahPenitip from "@/components/pages/master-data/Penitip/TambahPenitip";
+import DetailProduk from "@/components/pages/master-data/Penitip/DetailProduk";
 
 const LayoutRouter = () => {
   return (
@@ -59,6 +60,7 @@ const LayoutRouter = () => {
       <Route path="penitip" element={<Penitip />} />
       <Route path="penitip/tambah-penitip" element={<TambahPenitip />} />
       <Route path="penitip/tambah-penitip/:id" element={<TambahPenitip />} />
+      <Route path="penitip/detail-produk/:id" element={<DetailProduk />} />
 
       <Route path="*" element={<DataNotFound />} />
     </Routes>

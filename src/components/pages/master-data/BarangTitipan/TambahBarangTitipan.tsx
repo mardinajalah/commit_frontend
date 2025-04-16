@@ -616,7 +616,7 @@ const TambahBarangTitipan = () => {
         )}
 
         {/* Info Penitip */}
-        {selectedPenitip && (
+        {selectedPenitip && !paramId && (
           <div className="grid grid-cols-2 gap-4 mb-6 bg-gray-50 p-4 rounded">
             <div>
               <p className="font-medium">Nama Customer</p>
