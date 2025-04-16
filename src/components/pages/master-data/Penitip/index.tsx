@@ -16,9 +16,9 @@ const Penitip = () => {
         if (res && res.data && Array.isArray(res.data)) {
           const dataWithListProduct = {
             ...res,
-            data: res.data.map((item) => ({
+            data: res.data.map((item: PenitipType) => ({
               ...item,
-              listproduct: "Detail Produk", // Menambahkan properti 'listproduct' untuk setiap item
+              listproduct: "Detail Produk",
             })),
           };
 
