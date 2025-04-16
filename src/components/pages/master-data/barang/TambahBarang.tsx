@@ -9,6 +9,22 @@ type DataOptionsType = {
   isActive: string;
 }[]
 
+type ItemType = {
+  id: number,
+  name: string,
+  purchasePrice: number,
+  retailPrice: number,
+  wholesalePrice: number,
+  stock: number,
+  minStock: number,
+  barcode: string,
+  image: string | null,
+  category: string,
+  size: number,
+  unit: string,
+  isActive: string
+}
+
 
 const formSchema = z.object({
   name: z.string().min(1, 'Nama harus diisi').max(50, 'Nama maksimal 50 karakter'),
@@ -30,6 +46,8 @@ const TambahBarang = () => {
   const [unit, setUnit] = useState<DataOptionsType>([]);
   const navigate = useNavigate();
   const { id: paramId } = useParams();
+  const [barcode, setBarcode] = useState<ItemType[]>([]);
+  const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
 
   const [form, setForm] = useState({
     name: '',
@@ -45,8 +63,6 @@ const TambahBarang = () => {
     unitId: '',
     isActive: 'YES',
   });
-
-  const [errors, setErrors] = useState<Partial<Record<keyof typeof form, string>>>({});
 
   useEffect(() => {
     if (paramId) {
@@ -83,12 +99,16 @@ const TambahBarang = () => {
       .get('http://localhost:3000/api/unit')
       .then((res) => setUnit(res.data.data))
       .catch((err) => console.error('Gagal mengambil satuan:', err));
+
+    axios
+      .get('http://localhost:3000/api/product')
+      .then((res) => setBarcode(res.data.data))
+      .catch((err) => console.error('Gagal mengambil data barang:', err));
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement; // 👈 Cast agar bisa akses `files`
     const { name, value, type } = target;
-
     if (type === 'file') {
       const file = target.files?.[0];
       if (file) {
@@ -114,6 +134,11 @@ const TambahBarang = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    barcode.map((item: ItemType) => {
+      if (item.barcode === form.barcode) {
+        setErrors((prev) => ({ ...prev, barcode: 'Nomor barcode sudah ada' }));
+      }
+    })
     const dataForm = {
       name: form.name,
       purchasePrice: Number(form.purchasePrice),
@@ -141,7 +166,6 @@ const TambahBarang = () => {
     }
 
     const payload = result.data;
-    console.log(payload);
     
     const url = paramId ? `http://localhost:3000/api/product/${paramId}` : 'http://localhost:3000/api/product';
     const method = paramId ? axios.put : axios.post;
