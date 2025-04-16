@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { z } from "zod";
 import axios from "axios";
+import { debounce } from "lodash";
 
 // Definisi tipe data
 interface Penitip {
@@ -23,6 +24,12 @@ interface BarangTitipan {
   categoryId: number;
   sellPrice: number | string;
   profitPercent: number | string;
+}
+
+// Filter options for vendor search
+interface FilterOptions {
+  sortBy: "name" | "newest";
+  addressFilter: string;
 }
 
 // Skema validasi untuk barang titipan
@@ -47,12 +54,21 @@ const formSchema = z.object({
 const TambahBarangTitipan = () => {
   const { id: paramId } = useParams();
   const navigate = useNavigate();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // State untuk penitip
   const [searchQuery, setSearchQuery] = useState("");
   const [penitipResults, setPenitipResults] = useState<Penitip[]>([]);
   const [showPenitipResults, setShowPenitipResults] = useState(false);
   const [selectedPenitip, setSelectedPenitip] = useState<Penitip | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+
+  // State untuk filter penitip
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    sortBy: "name",
+    addressFilter: "",
+  });
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
 
   // State untuk kategori
   const [categories, setCategories] = useState<KategoriOption[]>([]);
@@ -75,6 +91,33 @@ const TambahBarangTitipan = () => {
     newBarang?: Partial<Record<keyof BarangTitipan, string>>;
     items?: Record<number, Partial<Record<keyof BarangTitipan, string>>>;
   }>({});
+
+  // Create debounced search function
+  const debouncedSearch = useRef(
+    debounce(async (query: string) => {
+      if (!query.trim()) {
+        setPenitipResults([]);
+        setShowPenitipResults(false);
+        setIsSearching(false);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/vendor?search=${query}`
+        );
+        const vendors = response.data.data || response.data;
+        const filteredVendors = applyFilters(vendors);
+        setPenitipResults(filteredVendors);
+        setShowPenitipResults(true);
+      } catch (err) {
+        console.error("Error searching for penitip:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300)
+  ).current;
 
   useEffect(() => {
     if (paramId) {
@@ -102,19 +145,83 @@ const TambahBarangTitipan = () => {
       .catch((err) => console.error("Gagal mengambil kategori:", err));
   }, []);
 
-  // Pencarian penitip
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+  // Clean up debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
 
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/vendor?search=${searchQuery}`
-      );
-      setPenitipResults(response.data.data || response.data);
-      setShowPenitipResults(true);
-    } catch (err) {
-      console.error("Error searching for penitip:", err);
+  // Handle search input change with debounced search
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (!selectedPenitip || selectedPenitip.name !== query) {
+      debouncedSearch(query);
     }
+  };
+
+  // Toggle filter panel
+  const toggleFilterPanel = () => {
+    setShowFilterPanel(!showFilterPanel);
+  };
+
+  // Apply filters to search results
+  const applyFilters = (vendors: Penitip[]): Penitip[] => {
+    let filteredVendors = [...vendors];
+
+    // Apply address filter if provided
+    if (filterOptions.addressFilter) {
+      filteredVendors = filteredVendors.filter((vendor) =>
+        vendor.address
+          .toLowerCase()
+          .includes(filterOptions.addressFilter.toLowerCase())
+      );
+    }
+
+    // Sort results
+    if (filterOptions.sortBy === "name") {
+      filteredVendors.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // For "newest" we're assuming vendor IDs are sequential and higher IDs are newer
+    else if (filterOptions.sortBy === "newest") {
+      filteredVendors.sort((a, b) => b.id - a.id);
+    }
+
+    return filteredVendors;
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFilterOptions((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Apply current filters to existing results
+  const handleApplyFilters = () => {
+    // Re-apply filters on existing results
+    if (penitipResults.length > 0) {
+      setPenitipResults(applyFilters(penitipResults));
+    }
+    // Re-run search with current query to apply filters
+    else if (searchQuery) {
+      debouncedSearch(searchQuery);
+    }
+    setShowFilterPanel(false);
+  };
+
+  // Reset filters
+  const handleResetFilters = () => {
+    setFilterOptions({
+      sortBy: "name",
+      addressFilter: "",
+    });
   };
 
   // Pilih penitip
@@ -125,6 +232,31 @@ const TambahBarangTitipan = () => {
     // Reset errors jika ada
     setErrors((prev) => ({ ...prev, form: undefined }));
   };
+
+  // Handle click outside of search results
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node) &&
+        !event.target.closest(".search-results")
+      ) {
+        setShowPenitipResults(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Focus search input when component mounts
+  useEffect(() => {
+    if (!paramId && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [paramId]);
 
   // Handle perubahan form barang baru
   const handleBarangChange = (
@@ -214,6 +346,54 @@ const TambahBarangTitipan = () => {
   // Submit form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (paramId) {
+      // EDIT MODE: validasi newBarang saja
+      const result = barangSchema.safeParse(newBarang);
+
+      if (!result.success) {
+        const fieldErrors: Partial<Record<keyof BarangTitipan, string>> = {};
+        result.error.errors.forEach((err) => {
+          const fieldName = err.path[0] as keyof BarangTitipan;
+          fieldErrors[fieldName] = err.message;
+        });
+
+        setErrors((prev) => ({
+          ...prev,
+          newBarang: fieldErrors,
+        }));
+
+        return;
+      }
+
+      const updatedPayload = {
+        name: newBarang.name,
+        categoryId: newBarang.categoryId,
+        sellPrice: parseFloat(newBarang.sellPrice.toString()),
+        profitPercent: parseFloat(newBarang.profitPercent.toString()),
+      };
+
+      axios
+        .put(
+          `http://localhost:3000/api/vendor_product/${paramId}`,
+          updatedPayload
+        )
+        .then(() => {
+          console.log("Data berhasil diupdate");
+          navigate("/dashboard/barang-titipan");
+        })
+        .catch((err) => {
+          console.error("Gagal mengupdate:", err.response?.data || err.message);
+          alert(
+            "Gagal mengupdate data: " +
+              (err.response?.data?.message || err.message)
+          );
+        });
+
+      return;
+    }
+
+    // ADD MODE
     if (!selectedPenitip) {
       setErrors((prev) => ({
         ...prev,
@@ -230,7 +410,6 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // Validasi keseluruhan form
     const payload = {
       vendorId: selectedPenitip.id,
       items: barangList,
@@ -249,7 +428,6 @@ const TambahBarangTitipan = () => {
           formErrors.form = err.message;
         } else if (err.path[0] === "items") {
           if (err.path.length > 1) {
-            // Error untuk item tertentu
             const index = err.path[1] as number;
             const field = err.path[2] as keyof BarangTitipan;
 
@@ -258,7 +436,6 @@ const TambahBarangTitipan = () => {
 
             formErrors.items[index][field] = err.message;
           } else {
-            // Error untuk keseluruhan items
             formErrors.form = err.message;
           }
         }
@@ -272,18 +449,15 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // Kirim data satu per satu (bukan array)
-    // Dari error terlihat bahwa API mengharapkan satu objek per request, bukan array
-
+    // Kirim satu per satu
     const promises = barangList.map((item) => {
-      console.log(item.categoryId);
       const singleItemPayload = {
         vendorId: selectedPenitip.id,
         name: item.name,
         categoryId: item.categoryId,
         sellPrice: parseFloat(item.sellPrice.toString()),
         profitPercent: parseFloat(item.profitPercent.toString()),
-        entryDate: new Date().toISOString(), // Tambahkan entryDate yang diperlukan oleh skema Prisma
+        entryDate: new Date().toISOString(),
       };
 
       return axios.post(
@@ -303,22 +477,6 @@ const TambahBarangTitipan = () => {
             (err.response?.data?.message || err.message)
         );
       });
-
-    const setPayload = result.data;
-    const url = paramId
-      ? `http://localhost:3000/api/vendor_product/${paramId}`
-      : "http://localhost:3000/api/vendor_product";
-
-    const method = paramId ? axios.put : axios.post;
-
-    method(url, setPayload)
-      .then(() => {
-        console.log(
-          paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan"
-        );
-        navigate("/dashboard/barang-titipan");
-      })
-      .catch((err) => console.error("Gagal menyimpan:", err));
   };
 
   return (
@@ -327,41 +485,126 @@ const TambahBarangTitipan = () => {
         onSubmit={handleSubmit}
         className="p-6 mt-5 bg-white rounded-lg shadow-md border border-gray-300"
       >
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Titipan Baru</h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          {paramId ? "Edit Barang Titipan" : "Tambah Barang Titipan"}
+        </h2>
 
         {/* Pencarian Penitip */}
         {!paramId && (
           <div className="mb-6 relative">
             <label className="block text-gray-700 mb-1">Cari Penitip</label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari penitip"
-                className="flex-1 p-2 border border-gray-300 rounded-lg"
-              />
+            <div className="flex gap-2 mb-2">
+              <div className="relative flex-1">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  placeholder="Ketik nama penitip..."
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  onFocus={() => {
+                    if (penitipResults.length > 0) {
+                      setShowPenitipResults(true);
+                    }
+                  }}
+                />
+                {isSearching && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-800"></div>
+                  </div>
+                )}
+              </div>
               <button
                 type="button"
-                onClick={handleSearch}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                onClick={toggleFilterPanel}
+                className={`px-4 py-2 ${
+                  showFilterPanel
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-800"
+                } rounded hover:bg-blue-700 hover:text-white`}
               >
-                Cari
+                Filter
               </button>
             </div>
 
-            {/* Hasil pencarian penitip */}
-            {showPenitipResults && penitipResults.length > 0 && (
-              <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg">
-                {penitipResults.map((penitip) => (
-                  <div
-                    key={penitip.id}
-                    onClick={() => selectPenitip(penitip)}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {penitip.name} - {penitip.phoneNumber}
+            {/* Filter Panel */}
+            {showFilterPanel && (
+              <div className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-md">
+                <h4 className="font-semibold mb-3">Filter Pencarian</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-700 mb-1">
+                      Urutkan Berdasarkan
+                    </label>
+                    <select
+                      name="sortBy"
+                      value={filterOptions.sortBy}
+                      onChange={handleFilterChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg bg-white"
+                    >
+                      <option value="name">Nama (A-Z)</option>
+                      <option value="newest">Terbaru</option>
+                    </select>
                   </div>
-                ))}
+                  <div>
+                    <label className="block text-gray-700 mb-1">
+                      Alamat Mengandung
+                    </label>
+                    <input
+                      type="text"
+                      name="addressFilter"
+                      value={filterOptions.addressFilter}
+                      onChange={handleFilterChange}
+                      placeholder="Filter alamat"
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    type="button"
+                    onClick={handleResetFilters}
+                    className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg border border-gray-300 hover:bg-gray-200"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleApplyFilters}
+                    className="px-3 py-1 bg-[#6C0AFF] text-white rounded-lg hover:bg-[#5a00e6]"
+                  >
+                    Terapkan
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Hasil pencarian penitip */}
+            {showPenitipResults && (
+              <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-y-auto search-results">
+                {penitipResults.length > 0 ? (
+                  penitipResults.map((penitip) => (
+                    <div
+                      key={penitip.id}
+                      onClick={() => selectPenitip(penitip)}
+                      className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100"
+                    >
+                      <div className="font-medium">{penitip.name}</div>
+                      <div className="text-sm text-gray-600">
+                        {penitip.phoneNumber}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {penitip.address}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-3 text-center text-gray-500">
+                    {searchQuery
+                      ? "Tidak ada hasil yang ditemukan"
+                      : "Mulai mengetik untuk mencari penitip"}
+                  </div>
+                )}
               </div>
             )}
 
