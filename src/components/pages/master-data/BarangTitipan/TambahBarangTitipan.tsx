@@ -238,7 +238,8 @@ const TambahBarangTitipan = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node) &&
+        event.target instanceof HTMLElement &&
+        !searchInputRef.current.contains(event.target) &&
         !event.target.closest(".search-results")
       ) {
         setShowPenitipResults(false);
