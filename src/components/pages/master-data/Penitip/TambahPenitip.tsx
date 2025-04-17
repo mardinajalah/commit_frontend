@@ -8,7 +8,7 @@ const formSchema = z.object({
   name: z.string().max(50, "Nama maksimal 50 karakter"),
   address: z.string(),
   phoneNumber: z.string(),
-  listProduct: z.string(),
+  listProduct: z.string().optional(),
   isActive: z.enum(["YES", "NO"]).optional(),
 });
 

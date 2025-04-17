@@ -24,7 +24,6 @@ const Table = ({ datas, to, onDelete, idFild = "id" }: TableProps) => {
   const itemsPerPage = 5;
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  // 🔁 Atur ulang currentPage jika melebihi total halaman baru
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
@@ -72,18 +71,9 @@ const Table = ({ datas, to, onDelete, idFild = "id" }: TableProps) => {
                       key={columnIndex}
                       className="p-2 border border-gray-300 text-center"
                     >
-                      {column.toLowerCase() === "id" ? (
-                        rowIndex + 1 + (currentPage - 1) * itemsPerPage
-                      ) : column.toLowerCase() === "listproduct" ? (
-                        <Link
-                          to={`${to}/${item[idFild]}`}
-                          className="text-blue-600 hover:underline"
-                        >
-                          Detail Produk
-                        </Link>
-                      ) : (
-                        item[column]
-                      )}
+                      {column.toLowerCase() === "id"
+                        ? rowIndex + 1 + (currentPage - 1) * itemsPerPage
+                        : item[column]}
                     </td>
                   ))}
 

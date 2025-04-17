@@ -16,12 +16,26 @@ const Penitip = () => {
         // Memastikan data memiliki kolom 'listproduct' untuk tombol Detail Produk
         if (res && res.data && Array.isArray(res.data)) {
           const dataWithListProduct = {
-            ...res,
+            title: "vendor",
+            header: [
+              "id",
+              "name",
+              "phoneNumber",
+              "address",
+              "isActive",
+              "listproduct",
+            ],
             data: res.data.map((item: any) => ({
-              id: item._id, // atau item.vendor_id
-              ...item,
+              id: item.id,
+              name: item.name,
+              phoneNumber: item.phoneNumber,
+              address: item.address,
+              isActive: item.isActive ? "YES" : "NO",
               listproduct: (
-                <Link to={`/dashboard/penitip/detail-produk/${item._id}`}>
+                <Link
+                  to={`/dashboard/penitip/detail-produk/${item.id}`}
+                  className="text-blue-600 hover:underline"
+                >
                   Detail Produk
                 </Link>
               ),
@@ -70,12 +84,14 @@ const Penitip = () => {
   return (
     <>
       <TampilanUtama link="/dashboard/penitip/tambah-penitip">
-        <Table
-          datas={tableData}
-          to="/dashboard/penitip/detail-produk" // Route untuk detail produk
-          onDelete={handleDelete} // Pastikan fungsi handleDelete dilewatkan dengan benar
-          idFild="id" // Pastikan nama field ID sesuai dengan data Anda
-        />
+        {tableData.length > 0 && (
+          <Table
+            datas={tableData}
+            to="/dashboard/penitip/tambah-penitip"
+            onDelete={handleDelete}
+            idFild="id"
+          />
+        )}
       </TampilanUtama>
     </>
   );
