@@ -3,6 +3,7 @@ import { getAllDataPenitip, deletePenitip } from "@/data";
 import TampilanUtama from "../TampilanUtama";
 import { useEffect, useState } from "react";
 import { PenitipType } from "@/data/interface";
+import { Link } from "react-router-dom";
 
 const Penitip = () => {
   const [tableData, setTableData] = useState<
@@ -16,9 +17,14 @@ const Penitip = () => {
         if (res && res.data && Array.isArray(res.data)) {
           const dataWithListProduct = {
             ...res,
-            data: res.data.map((item: PenitipType) => ({
+            data: res.data.map((item: any) => ({
+              id: item._id, // atau item.vendor_id
               ...item,
-              listproduct: "Detail Produk",
+              listproduct: (
+                <Link to={`/dashboard/penitip/detail-produk/${item._id}`}>
+                  Detail Produk
+                </Link>
+              ),
             })),
           };
 

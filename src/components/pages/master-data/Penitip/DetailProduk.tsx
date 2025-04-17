@@ -12,10 +12,9 @@ interface Vendor {
 interface VendorProduct {
   id: number;
   name: string;
-  category: string;
+  kategory: string;
   sellPrice: number;
   profitPercent: number;
-  vendorId: number;
 }
 
 const DetailProduk: React.FC = () => {
@@ -45,15 +44,15 @@ const DetailProduk: React.FC = () => {
 
         // Fetch products for this specific vendor
         const productsResponse = await fetch(
-          `http://localhost:3000/api/vendor_product?vendorid=${id}`
+          `http://localhost:3000/api/vendor_product/vendor/${id}`
         );
         if (!productsResponse.ok) {
           throw new Error("Failed to fetch product data");
         }
         const productsData = await productsResponse.json();
-
+        console.log(productsData);
         setVendor(vendorData);
-        setProducts(productsData);
+        setProducts(productsData.data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unknown error occurred"
@@ -146,7 +145,7 @@ const DetailProduk: React.FC = () => {
                         {product.name}
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-900">
-                        {product.category}
+                        {product.kategory}
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-900">
                         {new Intl.NumberFormat("id-ID").format(
