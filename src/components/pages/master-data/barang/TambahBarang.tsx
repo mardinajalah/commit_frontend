@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 type DataOptionsType = {
   id: number;
@@ -172,10 +173,14 @@ const TambahBarang = () => {
 
     method(url, payload)
       .then(() => {
-        alert(paramId ? 'Data berhasil diubah' : 'Data berhasil ditambahkan');
+        if (paramId) {
+          swal("Berhasil", "Data berhasil diubah", "success");
+        }else {
+          swal("Berhasil", "Data berhasil ditambahkan", "success");
+        }
         navigate('/dashboard/barang');
       })
-      .catch((err) => console.error('Gagal menyimpan:', err));
+      .catch(() => swal("Gagal", "Data gagal ditambahkan", "error"));
   };
 
   return (

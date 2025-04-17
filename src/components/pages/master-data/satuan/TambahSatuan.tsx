@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { z } from "zod";
+import swal from "sweetalert";
 
 // Schema validasi hanya untuk name dan isActive (optional)
 const formSchema = z.object({
@@ -66,10 +67,14 @@ const TambahSatuan = () => {
 
     method(url, payload)
       .then(() => {
-        console.log(paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan");
+        if (paramId) {
+          swal("Berhasil", "Data berhasil diubah", "success");
+        } else {
+          swal("Berhasil", "Data berhasil ditambahkan", "success");
+        }
         navigate("/dashboard/satuan");
       })
-      .catch((err) => console.error("Gagal menyimpan:", err));
+      .catch(() => swal("Gagal", "Data gagal ditambahkan", "error"));
   };
 
   return (
@@ -79,6 +84,9 @@ const TambahSatuan = () => {
           onSubmit={handleSubmit}
           className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-md space-y-6"
         >
+          <h2 className="text-2xl font-semibold pb-2">
+            {paramId ? "Ubah satuan" : "Tambah Satuan"}
+          </h2>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Nama Satuan</label>
             <input
