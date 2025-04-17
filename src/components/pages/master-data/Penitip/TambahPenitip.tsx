@@ -33,7 +33,9 @@ const TambahPenitip = () => {
       axios
         .get(`http://localhost:3000/api/vendor/${paramId}`)
         .then((res) => setForm(res.data))
-        .catch((err) => console.error("Gagal mengambil data:", err));
+        .catch(() => {
+          swal("Error", "Gagal mengambil data", "error");
+        });
     }
   }, [paramId]);
 
@@ -77,12 +79,16 @@ const TambahPenitip = () => {
 
     method(url, payload)
       .then(() => {
-        console.log(
-          paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan"
-        );
+        if (paramId) {
+          swal("Berhasil", "Data berhasil diubah", "success");
+        } else {
+          swal("Berhasil", "Data berhasil ditambahkan", "success");
+        }
         navigate("/dashboard/penitip");
       })
-      .catch((err) => console.error("Gagal menyimpan:", err));
+      .catch(() => {
+        swal("Gagal", "Gagal menyimpan data", "error");
+      });
   };
 
   return (

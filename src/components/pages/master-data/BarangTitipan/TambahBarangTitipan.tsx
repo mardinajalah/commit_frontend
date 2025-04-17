@@ -380,15 +380,11 @@ const TambahBarangTitipan = () => {
           updatedPayload
         )
         .then(() => {
-          console.log("Data berhasil diupdate");
+          swal("Berhasil", "Data anggota berhasil disimpan", "success");
           navigate("/dashboard/barang-titipan");
         })
-        .catch((err) => {
-          console.error("Gagal mengupdate:", err.response?.data || err.message);
-          alert(
-            "Gagal mengupdate data: " +
-              (err.response?.data?.message || err.message)
-          );
+        .catch(() => {
+          swal("Error", "Gagal mengambil data", "error");
         });
 
       return;
@@ -469,14 +465,15 @@ const TambahBarangTitipan = () => {
 
     Promise.all(promises)
       .then(() => {
+        if (paramId) {
+          swal("Berhasil", "Data berhasil diubah", "success");
+        } else {
+          swal("Berhasil", "Data berhasil ditambahkan", "success");
+        }
         navigate("/dashboard/barang-titipan");
       })
-      .catch((err) => {
-        console.error("Gagal menyimpan:", err.response?.data || err.message);
-        alert(
-          "Gagal menyimpan data: " +
-            (err.response?.data?.message || err.message)
-        );
+      .catch(() => {
+        swal("Gagal", "Gagal menyimpan data", "error");
       });
   };
 

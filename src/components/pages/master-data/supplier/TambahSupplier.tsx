@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { z } from "zod";
+import swal from "sweetalert";
 
 // Validasi pakai Zod
 const formSchema = z.object({
@@ -33,7 +34,9 @@ const TambahSupplier = () => {
       axios
         .get(`http://localhost:3000/api/supplier/${paramId}`)
         .then((res) => setForm(res.data))
-        .catch((err) => console.error("Gagal mengambil data:", err));
+        .catch(() => {
+          swal("Error", "Gagal mengambil data", "error");
+        });
     }
   }, [paramId]);
 
@@ -77,12 +80,14 @@ const TambahSupplier = () => {
 
     method(url, payload)
       .then(() => {
-        console.log(
-          paramId ? "Data berhasil diubah" : "Data berhasil ditambahkan"
-        );
+        if (paramId) {
+          swal("Berhasil", "Data berhasil diubah", "success");
+        } else {
+          swal("Berhasil", "Data berhasil ditambahkan", "success");
+        }
         navigate("/dashboard/supplier");
       })
-      .catch((err) => console.error("Gagal menyimpan:", err));
+      .catch(() => swal("Gagal", "Data gagal ditambahkan", "error"));
   };
 
   return (

@@ -76,6 +76,7 @@ export interface BarangTitipanType {
     category: string;
     sellPrice: DoubleRange;
     profitPercent: DoubleRange;
+    entryDate: string;
   };
 }
 

@@ -57,27 +57,36 @@ const Penitip = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    try {
-      // Periksa apakah id valid
-      if (!id) {
-        console.error("ID tidak valid:", id);
-        return;
-      }
+    const result = await swal({
+      title: "Yakin ingin menghapus data ini?",
+      icon: "warning",
+      buttons: {
+        confirm: {
+          text: "Ya",
+          value: true,
+          visible: true,
+          className: "btn btn-primary",
+          closeModal: true,
+        },
+        cancel: {
+          text: "Tidak",
+          value: false,
+          visible: true,
+          className: "btn btn-danger",
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    });
 
-      // Konfirmasi sebelum menghapus
-      if (window.confirm("Yakin ingin menghapus data ini?")) {
-        console.log("Menghapus penitip dengan ID:", id);
-
-        // Panggil fungsi delete
-        const result = await deletePenitip(id);
-        console.log("Hasil delete:", result);
-
-        // Refresh data setelah delete berhasil
+    if (result) {
+      try {
+        await deletePenitip(id);
+        swal("Berhasil", "Data berhasil dihapus", "success");
         fetchData();
+      } catch (err) {
+        swal("data digunakan", "Data Digunakan di komponen Lain", "error");
       }
-    } catch (err) {
-      console.error("Gagal menghapus data:", err);
-      alert("Gagal menghapus data. Silahkan coba lagi.");
     }
   };
 
