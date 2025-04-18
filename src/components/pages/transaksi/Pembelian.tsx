@@ -2,37 +2,9 @@ import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Supplier, Product, FormValues } from "@/data/interface";
 import { getAllDataSupplier, getAllDataBarang } from "@/data";
 
-// ================= Interface =================
-interface Supplier {
-  id: number;
-  name: string;
-  phoneNumber: string; // Added phoneNumber field
-}
-
-interface Product {
-  id: number;
-  name: string;
-}
-
-interface FormProduct {
-  productId: number;
-  purchasePrice: number;
-  retailPrice: number;
-  wholesalePrice: number;
-  quantity: number;
-  subtotal: number;
-}
-
-interface FormValues {
-  saleDate: string;
-  supplierId: number;
-  isPaid: boolean;
-  products: FormProduct[];
-}
-
-// ================= Schema =================
 const formSchema = z.object({
   saleDate: z.string().min(1, "Tanggal wajib diisi"),
   supplierId: z.number().min(1, "Supplier wajib diisi"),
@@ -48,7 +20,6 @@ const formSchema = z.object({
         subtotal: z.number().nonnegative(),
       })
     )
-    // Removed any restrictions on the maximum number of products
     .min(1, "Minimal 1 produk harus ditambahkan"),
 });
 
@@ -80,12 +51,11 @@ export default function FormTransaksi() {
         const suppliersResponse = await getAllDataSupplier();
         const productsResponse = await getAllDataBarang();
 
-        // Ensure the data is extracted correctly from the API response
         const suppliersData = Array.isArray(suppliersResponse.data)
           ? suppliersResponse.data.map((supplier: any) => ({
               id: supplier.id,
               name: supplier.name,
-              phoneNumber: supplier.phoneNumber, // Extract phoneNumber
+              phoneNumber: supplier.phoneNumber,
             }))
           : [];
         const productsData = Array.isArray(productsResponse.data)
@@ -99,8 +69,8 @@ export default function FormTransaksi() {
         setProducts(productsData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setSuppliers([]); // Fallback to empty array
-        setProducts([]); // Fallback to empty array
+        setSuppliers([]);
+        setProducts([]);
       }
     };
 
@@ -141,7 +111,7 @@ export default function FormTransaksi() {
       saleDate: watch("saleDate"),
       supplierId: watch("supplierId"),
       isPaid: watch("isPaid"),
-      products: [], // Clear the products array
+      products: [],
     });
   };
 
@@ -225,7 +195,6 @@ export default function FormTransaksi() {
             {suppliers.map((sup) => (
               <option key={sup.id} value={sup.id}>
                 {sup.name} - {sup.phoneNumber}{" "}
-                {/* Display name and phone number */}
               </option>
             ))}
           </select>

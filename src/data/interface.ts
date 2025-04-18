@@ -91,3 +91,30 @@ export interface PenitipType {
     listProduct: string;
   };
 }
+
+export interface Supplier {
+  id: number;
+  name: string;
+  phoneNumber: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+}
+
+interface FormProduct {
+  productId: number;
+  purchasePrice: number;
+  retailPrice: number;
+  wholesalePrice: number;
+  quantity: number;
+  subtotal: number;
+}
+
+export interface FormValues {
+  saleDate: string;
+  supplierId: number;
+  isPaid: boolean;
+  products: FormProduct[];
+}

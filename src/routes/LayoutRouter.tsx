@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Pembeli from "@/components/pages/transaksi/Pembeli";
+import Pembeli from "@/components/pages/transaksi/Pembelian";
 import Penjual from "@/components/pages/transaksi/Penjual";
 import HutangPenjual from "@/components/pages/transaksi/HutangPenjual";
 import Barang from "@/components/pages/master-data/barang";
