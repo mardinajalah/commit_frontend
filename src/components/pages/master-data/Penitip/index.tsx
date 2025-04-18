@@ -13,7 +13,6 @@ const Penitip = () => {
   const fetchData = () => {
     getAllDataPenitip()
       .then((res) => {
-        // Memastikan data memiliki kolom 'listproduct' untuk tombol Detail Produk
         if (res && res.data && Array.isArray(res.data)) {
           const dataWithListProduct = {
             title: "vendor",

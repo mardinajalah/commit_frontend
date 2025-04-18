@@ -4,7 +4,6 @@ import { z } from "zod";
 import axios from "axios";
 import { debounce } from "lodash";
 
-// Definisi tipe data
 interface Penitip {
   id: number;
   name: string;
@@ -26,13 +25,11 @@ interface BarangTitipan {
   profitPercent: number | string;
 }
 
-// Filter options for vendor search
 interface FilterOptions {
   sortBy: "name" | "newest";
   addressFilter: string;
 }
 
-// Skema validasi untuk barang titipan
 const barangSchema = z.object({
   name: z
     .string()
@@ -82,17 +79,14 @@ const TambahBarangTitipan = () => {
     profitPercent: "",
   });
 
-  // State untuk daftar barang
   const [barangList, setBarangList] = useState<BarangTitipan[]>([]);
 
-  // State untuk error
   const [errors, setErrors] = useState<{
     form?: string;
     newBarang?: Partial<Record<keyof BarangTitipan, string>>;
     items?: Record<number, Partial<Record<keyof BarangTitipan, string>>>;
   }>({});
 
-  // Create debounced search function
   const debouncedSearch = useRef(
     debounce(async (query: string) => {
       if (!query.trim()) {
@@ -137,7 +131,6 @@ const TambahBarangTitipan = () => {
     }
   }, [paramId]);
 
-  // Fetch kategori saat komponen dimount
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/category")
@@ -145,14 +138,12 @@ const TambahBarangTitipan = () => {
       .catch((err) => console.error("Gagal mengambil kategori:", err));
   }, []);
 
-  // Clean up debounce on unmount
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();
     };
   }, [debouncedSearch]);
 
-  // Handle search input change with debounced search
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -162,16 +153,13 @@ const TambahBarangTitipan = () => {
     }
   };
 
-  // Toggle filter panel
   const toggleFilterPanel = () => {
     setShowFilterPanel(!showFilterPanel);
   };
 
-  // Apply filters to search results
   const applyFilters = (vendors: Penitip[]): Penitip[] => {
     let filteredVendors = [...vendors];
 
-    // Apply address filter if provided
     if (filterOptions.addressFilter) {
       filteredVendors = filteredVendors.filter((vendor) =>
         vendor.address
@@ -180,19 +168,15 @@ const TambahBarangTitipan = () => {
       );
     }
 
-    // Sort results
     if (filterOptions.sortBy === "name") {
       filteredVendors.sort((a, b) => a.name.localeCompare(b.name));
-    }
-    // For "newest" we're assuming vendor IDs are sequential and higher IDs are newer
-    else if (filterOptions.sortBy === "newest") {
+    } else if (filterOptions.sortBy === "newest") {
       filteredVendors.sort((a, b) => b.id - a.id);
     }
 
     return filteredVendors;
   };
 
-  // Handle filter changes
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -203,20 +187,15 @@ const TambahBarangTitipan = () => {
     }));
   };
 
-  // Apply current filters to existing results
   const handleApplyFilters = () => {
-    // Re-apply filters on existing results
     if (penitipResults.length > 0) {
       setPenitipResults(applyFilters(penitipResults));
-    }
-    // Re-run search with current query to apply filters
-    else if (searchQuery) {
+    } else if (searchQuery) {
       debouncedSearch(searchQuery);
     }
     setShowFilterPanel(false);
   };
 
-  // Reset filters
   const handleResetFilters = () => {
     setFilterOptions({
       sortBy: "name",
@@ -224,16 +203,13 @@ const TambahBarangTitipan = () => {
     });
   };
 
-  // Pilih penitip
   const selectPenitip = (penitip: Penitip) => {
     setSelectedPenitip(penitip);
     setShowPenitipResults(false);
     setSearchQuery(penitip.name);
-    // Reset errors jika ada
     setErrors((prev) => ({ ...prev, form: undefined }));
   };
 
-  // Handle click outside of search results
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -252,14 +228,12 @@ const TambahBarangTitipan = () => {
     };
   }, []);
 
-  // Focus search input when component mounts
   useEffect(() => {
     if (!paramId && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [paramId]);
 
-  // Handle perubahan form barang baru
   const handleBarangChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -270,7 +244,6 @@ const TambahBarangTitipan = () => {
       [name]: value,
     }));
 
-    // Reset error untuk field ini
     setErrors((prev) => ({
       ...prev,
       newBarang: {
@@ -279,7 +252,6 @@ const TambahBarangTitipan = () => {
       },
     }));
 
-    // Jika memilih kategori, set categoryId
     if (name === "category") {
       const selectedCategory = categories.find((cat) => cat.name === value);
       if (selectedCategory) {
@@ -291,9 +263,7 @@ const TambahBarangTitipan = () => {
     }
   };
 
-  // Tambah barang ke daftar
   const addBarang = () => {
-    // Validasi barang baru
     const result = barangSchema.safeParse(newBarang);
 
     if (!result.success) {
@@ -311,10 +281,8 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // Tambahkan barang ke list
     setBarangList([...barangList, newBarang]);
 
-    // Reset form barang baru
     setNewBarang({
       name: "",
       category: "",
@@ -323,20 +291,17 @@ const TambahBarangTitipan = () => {
       profitPercent: "",
     });
 
-    // Reset error untuk form barang baru
     setErrors((prev) => ({
       ...prev,
       newBarang: {},
     }));
   };
 
-  // Hapus barang dari daftar
   const removeBarang = (index: number) => {
     const updatedList = [...barangList];
     updatedList.splice(index, 1);
     setBarangList(updatedList);
 
-    // Hapus error untuk item ini jika ada
     if (errors.items && errors.items[index]) {
       const updatedErrors = { ...errors };
       delete updatedErrors.items![index];
@@ -349,7 +314,6 @@ const TambahBarangTitipan = () => {
     e.preventDefault();
 
     if (paramId) {
-      // EDIT MODE: validasi newBarang saja
       const result = barangSchema.safeParse(newBarang);
 
       if (!result.success) {
@@ -390,7 +354,6 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // ADD MODE
     if (!selectedPenitip) {
       setErrors((prev) => ({
         ...prev,
@@ -446,7 +409,6 @@ const TambahBarangTitipan = () => {
       return;
     }
 
-    // Kirim satu per satu
     const promises = barangList.map((item) => {
       const singleItemPayload = {
         vendorId: selectedPenitip.id,

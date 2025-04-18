@@ -62,6 +62,8 @@ const LayoutRouter = () => {
       <Route path="penitip/tambah-penitip/:id" element={<TambahPenitip />} />
       <Route path="penitip/detail-produk/:id" element={<DetailProduk />} />
 
+      <Route path="pembelian" element={<Pembeli />} />
+
       <Route path="*" element={<DataNotFound />} />
     </Routes>
   );

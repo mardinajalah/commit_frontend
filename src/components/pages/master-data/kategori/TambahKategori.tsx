@@ -4,7 +4,6 @@ import axios from "axios";
 import { z } from "zod";
 import swal from "sweetalert";
 
-// Schema validasi hanya untuk name dan isActive (optional)
 const formSchema = z.object({
   name: z
     .string()
@@ -74,7 +73,7 @@ const TambahKategori = () => {
 
     method(url, payload)
       .then(() => {
-        if(paramId) {
+        if (paramId) {
           swal("Berhasil", "Data berhasil diubah", "success");
         } else {
           swal("Berhasil", "Data berhasil ditambahkan", "success");

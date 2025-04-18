@@ -4,7 +4,6 @@ import axios from "axios";
 import { z } from "zod";
 import swal from "sweetalert";
 
-// Validasi pakai Zod
 const formSchema = z.object({
   name: z.string().max(50, "Nama maksimal 50 karakter"),
   address: z.string(),

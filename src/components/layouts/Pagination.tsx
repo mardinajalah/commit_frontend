@@ -1,4 +1,7 @@
-export const getPagination = (current: number, total: number): (number | string)[] => {
+export const getPagination = (
+  current: number,
+  total: number
+): (number | string)[] => {
   const delta = 1;
   const range: (number | string)[] = [];
   const rangeWithDots: (number | string)[] = [];
@@ -29,4 +32,4 @@ export const getPagination = (current: number, total: number): (number | string)
   }
 
   return rangeWithDots;
-}
+};

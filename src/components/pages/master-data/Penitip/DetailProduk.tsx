@@ -33,7 +33,6 @@ const DetailProduk: React.FC = () => {
       }
 
       try {
-        // Fetch specific vendor data by ID
         const vendorResponse = await fetch(
           `http://localhost:3000/api/vendor/${id}`
         );
@@ -42,7 +41,6 @@ const DetailProduk: React.FC = () => {
         }
         const vendorData = await vendorResponse.json();
 
-        // Fetch products for this specific vendor
         const productsResponse = await fetch(
           `http://localhost:3000/api/vendor_product/vendor/${id}`
         );
@@ -86,7 +84,7 @@ const DetailProduk: React.FC = () => {
     <div className="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md my-8 ">
       <div className="bg-gray-50 p-6 rounded-lg mb-6">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-          Detail Barang
+          Detail Barang Titipan
         </h1>
 
         <div className="mb-6">
@@ -116,7 +114,7 @@ const DetailProduk: React.FC = () => {
 
         <div>
           <h2 className="text-lg font-medium text-gray-700 mb-2">
-            Daftar Barang
+            Daftar Barang Titipan
           </h2>
 
           <div className="overflow-x-auto">
